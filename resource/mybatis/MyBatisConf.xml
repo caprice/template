@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<properties>
+	<!-- 切换到sqlserver 2005 取消此注释，然后注释掉mysql即可
+		<property name="dialect" value="SQLSERVER2005"/>
+	 -->	
+		<property name="dialect" value="MYSQL"/>
+	</properties>
+	
+    <plugins>
+        <plugin interceptor="com.gm.infobus.repository.pagination.interceptor.PaginationInterceptor">
+        </plugin>
+    </plugins>
+
+</configuration>

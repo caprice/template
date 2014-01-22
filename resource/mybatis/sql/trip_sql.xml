@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.gm.infobus.repository.TripDAO">
+	<resultMap id="rm" type="com.gm.infobus.entity.Trip">
+		<result property="id" jdbcType="INTEGER" column="id"/>
+		<result property="userName" jdbcType="VARCHAR" column="username"/>
+		<result property="latitude" jdbcType="DECIMAL" column="latitude" />
+		<result property="longitude" jdbcType="DECIMAL" column="longitude" />
+		<result property="title" jdbcType="VARCHAR" column="title"/>
+		<result property="mapurl" jdbcType="VARCHAR" column="mapurl"/>
+		<result property="recordtime" jdbcType="BIGINT" column="recordtime"/>
+		<result property="geohashcode" jdbcType="VARCHAR" column="geohashcode"/>
+	</resultMap>
+	<sql id="Base_Column_List">
+		id,
+		username,
+		latitude,
+	    longitude,
+		title,
+		mapurl,
+		recordtime,
+		geohashcode
+	</sql>
+	<select id="load" parameterType="java.lang.Integer" resultMap="rm">
+		SELECT 
+			<include refid="Base_Column_List" />
+		FROM trip 
+		WHERE 
+			id = #{id} 
+	</select>
+	
+	<select id="getNeighborTrips" parameterType="java.util.Map" resultMap="rm">
+		SELECT 
+			<include refid="Base_Column_List" />
+		FROM trip 
+		WHERE 
+			geohashcode like '${likeGeohash}%'
+	</select>
+	<!-- 查询所有的ID -->
+	<select id="findAllIds" resultType="java.lang.Integer">
+		SELECT id FROM trip
+	</select>
+
+	<!-- 按Id删除 -->
+	<delete id="delete" parameterType="java.lang.Integer">
+		DELETE FROM trip WHERE
+		id = #{id} 
+	</delete>
+	 <!-- 插入 -->
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO trip (
+		 	id,
+			username,
+			latitude,
+	    	longitude,
+			title,
+			mapurl,
+			recordtime,
+			geohashcode
+		) VALUES (
+			#{id},
+			#{userName},
+			#{latitude},
+	    	#{longitude},
+			#{title},
+			#{mapurl},
+			#{recordtime},
+			#{geohashcode}
+		)
+	</insert>
+	
+	<select id="countAll" resultType="java.lang.Integer">
+		SELECT count(id) FROM trip	
+	</select>
+	
+	<select id="findAll" resultMap="rm">
+		SELECT 
+			<include refid="Base_Column_List" />
+		FROM trip
+	</select>
+		
+	<!-- 更新 -->
+	<update id="updateSelective" parameterType="com.gm.infobus.entity.Trip">
+		UPDATE trip 
+			<set>
+				<if test="userName!=null">
+				username = #{userName},
+				</if>
+				<if test="latitude!=null">
+				latitude = #{latitude},
+				</if>
+				<if test="longitude!=null">
+				longitude = #{longitude},
+				</if>				
+				<if test="title!=null">
+				title = #{title},
+				</if>
+				<if test="mapurl!=null">
+				mapurl = #{mapurl},
+				</if>
+				<if test="recordtime!=null">
+				recordtime = #{recordtime},
+				</if>
+				<if test="geohashcode!=null">
+				geohashcode = #{geohashcode},
+				</if>
+			</set>
+		WHERE 
+			id = #{id}
+	</update>
+	
+	<update id="update" parameterType="com.gm.infobus.entity.Trip">
+		UPDATE trip SET
+				username = #{userName},
+				latitude = #{latitude},
+				longitude = #{longitude},
+				title = #{title},
+				mapurl = #{mapurl},
+				recordtime = #{recordtime},
+				geohashcode = #{geohashcode}
+		WHERE 
+			id = #{id} 
+	</update>
+	
+</mapper>
+

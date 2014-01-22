@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.gm.infobus.repository.TripTrackDAO">
+	<resultMap id="rm" type="com.gm.infobus.entity.TripTrack">
+		<result property="id" jdbcType="INTEGER" column="id" />
+		<result property="tripid" jdbcType="INTEGER" column="tripid" />
+		<result property="latitude" jdbcType="DECIMAL" column="latitude" />
+		<result property="longitude" jdbcType="DECIMAL" column="longitude" />
+		<result property="altitude" jdbcType="DECIMAL" column="altitude" />
+		<result property="recordtime" jdbcType="BIGINT" column="recordtime" />
+		<result property="distance" jdbcType="DECIMAL" column="distance" />
+		<result property="speed" jdbcType="DECIMAL" column="speed" />
+		<result property="routetitle" jdbcType="VARCHAR" column="routetitle" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id,
+		tripid,
+		latitude,
+		longitude,
+		altitude,
+		recordtime,
+		distance,
+		speed,
+		routetitle
+	</sql>
+	<select id="load" parameterType="java.lang.Integer" resultMap="rm">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM triptrack
+		WHERE
+		id = #{id}
+	</select>
+	
+	<select id="getTripTrackByTripId" parameterType="java.lang.Integer" resultMap="rm">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM triptrack
+		WHERE
+		tripid = #{tripId}
+	</select>
+	
+		
+	<!-- 查询所有的ID -->
+	<select id="findAllIds" resultType="java.lang.Integer">
+		SELECT id FROM triptrack
+	</select>
+
+	<!-- 按Id删除 -->
+	<delete id="delete" parameterType="java.lang.Integer">
+		DELETE FROM triptrack WHERE
+		id
+		= #{id}
+	</delete>
+	<!-- 插入 -->
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		INSERT
+		INTO triptrack (
+		tripid,
+		latitude,
+		longitude,
+		altitude,
+		recordtime,
+		distance,
+		speed,
+		routetitle
+		) VALUES (
+		#{tripid},
+		#{latitude},
+		#{longitude},
+		#{altitude},
+		#{recordtime},
+		#{distance},
+		#{speed},
+		#{routetitle}
+		)
+	</insert>
+
+	<insert id="batchInsert" parameterType="java.util.Map" useGeneratedKeys="true" keyProperty="id">
+		INSERT
+		INTO triptrack (
+		tripid,
+		latitude,
+		longitude,
+		altitude,
+		recordtime,
+		distance,
+		speed,
+		routetitle
+		) VALUES 
+		<foreach collection="tripTrackList" item="triptrack" index="index" separator=",">
+			(#{triptrack.tripid}, #{triptrack.latitude},
+			#{triptrack.longitude}, #{triptrack.altitude}, #{triptrack.recordtime}, #{triptrack.distance},
+			#{triptrack.speed}, #{triptrack.routetitle})
+		</foreach>
+	</insert>
+
+	<select id="countAll" resultType="java.lang.Integer">
+		SELECT count(id) FROM triptrack
+	</select>
+
+	<select id="findAll" resultMap="rm">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM triptrack
+	</select>
+
+	<!-- 更新 -->
+	<update id="updateSelective" parameterType="com.gm.infobus.entity.TripTrack">
+		UPDATE triptrack
+		<set>
+			<if test="tripid!=null">
+				tripid = #{tripid},
+			</if>
+			<if test="latitude!=null">
+				latitude = #{latitude},
+			</if>
+			<if test="longitude!=null">
+				longitude = #{longitude}
+			</if>
+			<if test="altitude!=null">
+				altitude = #{altitude},
+			</if>
+			<if test="recordtime!=null">
+				recordtime = #{recordtime},
+			</if>
+			<if test="distince!=null">
+				distince = #{distance},
+			</if>
+			<if test="speed!=null">
+				speed = #{speed},
+			</if>
+			<if test="routetitle!=null">
+				routetitle = #{routetitle}
+			</if>
+		</set>
+		WHERE
+		id = #{id}
+	</update>
+
+	<update id="update" parameterType="com.gm.infobus.entity.TripTrack">
+		UPDATE triptrack SET
+		id = #{id},
+		tripid = #{tripid},
+		latitude = #{latitude},
+		longitude = #{longitude},
+		altitude = #{altitude},
+		recordtime = #{recordtime},
+		distance = #{distance},
+		speed = #{speed},
+		routetitle = #{routetitle}
+		WHERE
+		id = #{id}
+	</update>
+
+</mapper>
+

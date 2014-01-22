@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gm.infobus.repository.UserDAO">
+	<insert id="addUser" parameterType="User">
+		<![CDATA[
+		INSERT INTO user (username, name, password, email
+			, status, createDate, updateDate)
+		VALUES (#{userName}, #{name}, #{password}, #{email}
+			, #{status},#{createDate},#{updateDate})
+		]]>
+	</insert>
+
+	<insert id="addUserDetail" parameterType="UserDetail">
+		<![CDATA[
+		INSERT INTO userdetail
+		(username,age,birth,idcard,location,nickname,phone,plate,profession,sex,signature)
+		VALUES(#{userName},#{age},#{birth},#{idCard},#{location},#{nickName},#{phone},#{plate},#{profession},#{sex},#{signature}
+		);
+		]]>
+	</insert>
+
+	<update id="updateUserDetail" parameterType="UserDetail">
+		UPDATE userdetail
+		<set>
+        <if test="age != null">age=#{age},</if>
+        <if test="birth != null">birth=#{birth},</if>
+        <if test="idCard != null">idcard=#{idCard},</if>
+        <if test="location != null">location=#{location},</if>
+        <if test="nickName != null">nickname=#{nicName},</if>
+        <if test="location != null">location=#{location},</if>
+        <if test="phone != null">phone=#{phone},</if>
+        <if test="plate != null">plate=#{plate},</if>
+        <if test="photo != null">photo=#{photo},</if>
+        <if test="profession != null">profession=#{profession},</if>
+        <if test="sex != null">sex=#{sex},</if>
+        <if test="signature != null">signature=#{signature},</if>
+        </set>
+        WHERE username = #{userName}
+	</update>
+
+	<select id="findAllUsers" resultType="User">
+	<![CDATA[
+		select * from user
+	]]>
+	</select>
+
+	<select id="findAllUsersWithPagination" resultType="User">
+	<![CDATA[
+		select * from user
+	]]>
+	</select>
+
+	<select id="getLoginUser" parameterType="User" resultMap="userResult">
+	<![CDATA[
+	select u.username, u.name, u.email, u.createDate, u.updateDate, ud.nickname, ud.plate, 
+	ud.phone, ud.idcard, ud.sex, ud.age, ud.birth, ud.profession, ud.signature,ud.location, ud.photo
+	from user u join userdetail ud on u.username = ud.username
+	where u.username=#{userName} and u.password=#{password}
+	]]>
+	</select>
+
+	<resultMap id="userResult" type="User">
+		<id property="userName" column="username" />
+		<result property="name" column="name" />
+		<result property="email" column="email" />
+		<result property="createDate" column="createDate" />
+		<result property="update" column="updateDate" />
+		<association property="userDetail" javaType="UserDetail"
+			resultMap="userDetailMap" />
+	</resultMap>
+
+	<resultMap id="userDetailMap" type="UserDetail">
+		<id property="userName" column="username" />
+		<result property="nickName" column="nickname" />
+		<result property="plate" column="plate" />
+		<result property="phone" column="phone" />
+		<result property="idCard" column="idcard" />
+		<result property="sex" column="sex" />
+		<result property="age" column="age" />
+		<result property="birth" column="birth" />
+		<result property="profession" column="profession" />
+		<result property="signature" column="signature" />
+		<result property="location" column="location" />
+		<result property="photo" column="photo" />
+	</resultMap>
+
+	<select id="isUserNameExisted" parameterType="java.lang.String"
+		resultType="int">
+	<![CDATA[
+		select count(*) from user
+		where username=#{userName}
+	]]>
+	</select>
+
+	<select id="isPlateExisted" parameterType="java.lang.String"
+		resultType="int">
+	<![CDATA[
+		select count(*) from userdetail
+		where plate=#{plate}
+	]]>
+	</select>
+
+	<select id="getUsersByUserNames" resultMap="userResult">
+	select u.username, u.name, u.email, u.createDate, u.updateDate, ud.nickname, ud.plate, 
+	ud.phone, ud.idcard, ud.sex, ud.age, ud.birth, ud.profession, ud.signature,ud.location, ud.photo
+	from user u join userdetail ud on u.username = ud.username
+	where u.username in
+	 <foreach collection="array" item="userNames"  open="(" separator="," close=")">  
+        #{userNames}  
+     </foreach>  
+	</select>
+	
+		<select id="getUserByPlate" parameterType="java.lang.String"
+		resultMap="userResult">
+	<![CDATA[
+	select u.username, u.name, u.email, u.createDate, u.updateDate, ud.nickname, ud.plate, 
+	ud.phone, ud.idcard, ud.sex, ud.age, ud.birth, ud.profession, ud.signature,ud.location, ud.photo
+	from user u join userdetail ud on u.username = ud.username
+	where ud.plate = #{plate}
+	]]>
+	</select>
+</mapper>  
