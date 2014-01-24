@@ -2,6 +2,9 @@ package com.gm.infobus.entity;
 
 import java.util.List;
 
+import com.bugull.mongo.BuguEntity;
+import com.bugull.mongo.annotations.Entity;
+import com.bugull.mongo.annotations.Property;
 import com.gm.infobus.repository.base.AbstractDO;
 
 /**
@@ -10,30 +13,28 @@ import com.gm.infobus.repository.base.AbstractDO;
  * @date 2014年1月16日 下午2:06:25
  * 
  */
-public class Trip extends AbstractDO {
+@Entity
+public class Trip extends AbstractDO implements BuguEntity {
 
 	/**
 	 * @Fields serialVersionUID : TODO(用一句话描述这个变量表示什么) 下午2:05:42
 	 */
 	private static final long serialVersionUID = 96312286532732735L;
 	private int id;
+	@Property
 	private String userName;
 	private double latitude;
 	private double longitude;
 	private String title;
+	 @Property
 	private String mapurl;
 	private long recordtime;
 	private String geohashcode;
+	 @Property
 	private double distance;
 	private List<TripTrack> trackList;
 
-	public final int getId() {
-		return id;
-	}
 
-	public final void setId(int id) {
-		this.id = id;
-	}
 
 	public final String getUserName() {
 		return userName;
@@ -105,5 +106,17 @@ public class Trip extends AbstractDO {
 
 	public final void setDistance(double distance) {
 		this.distance = distance;
+	}
+
+	@Override
+	public void setId(String arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String getId() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
