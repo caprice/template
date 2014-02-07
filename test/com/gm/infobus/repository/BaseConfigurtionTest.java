@@ -10,8 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration  
 @ContextConfiguration(locations = "classpath:spring/applicationContext.xml")
-@TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
-@Transactional  
 public class BaseConfigurtionTest {
 
 }

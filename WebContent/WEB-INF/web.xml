@@ -33,9 +33,6 @@
 		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
 	</listener>
 
-	<listener>
-		<listener-class>com.gm.infobus.listener.MongoDBConnectionInitListener</listener-class>
-	</listener>
 	<!-- Filter 定义 -->
 	<!-- Character Encoding filter -->
 	<filter>
@@ -114,7 +111,7 @@
 
 	<!-- 加载首页 -->
 	<welcome-file-list>
-		<welcome-file>/index.do</welcome-file>
+		<welcome-file>/data/showData.do</welcome-file>
 	</welcome-file-list>
 
 	<context-param>
