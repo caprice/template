@@ -261,9 +261,17 @@ function docReady(){
 		tour.restart();
 	}
 
+	
+
 	//datatable
 	$('.datatable').dataTable({
-			"sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span12'i><'span12 center'p>>",
+			"bPaginate": true, //翻页功能
+			"bLengthChange": true, //改变每页显示数据数量
+			"bFilter": false, //过滤功能
+			"bSort": false, //排序功能
+			"bInfo": true,//页脚信息
+			"bAutoWidth": false,//自动宽度
+			"sDom": "<'row-fluid'<'span12'l>r>t<'row-fluid'<'span12'i>p>",
 			"sPaginationType": "bootstrap",
 			"oLanguage": {
 			"sLengthMenu": "_MENU_ records per page"
