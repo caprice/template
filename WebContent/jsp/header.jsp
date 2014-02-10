@@ -8,9 +8,8 @@
 				class="icon-bar"></span> <span class="icon-bar"></span> <span
 				class="icon-bar"></span>
 			</a> 
-			<a class="brand" href="index.html"> <img alt="Car Racing Logo"
-				src="${contextPath}/img/logo20.png" /> <span width="200px">CRacing</span></a>
-
+			<a class="brand" href="index.html"> <img alt="NGI Data"
+				src="${contextPath}/img/logo20.png" /> <span width="200px">NGI Data</span></a>
 			<!-- theme selector starts -->
 			<div class="btn-group pull-right theme-container">
 				<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">

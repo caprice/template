@@ -10,9 +10,6 @@
 <link href="${contextPath}/css/main.css" rel="stylesheet">
 <link href="${contextPath}/css/jquery-ui-1.8.21.custom.css"
 	rel="stylesheet">
-<link href='${contextPath}/css/fullcalendar.css' rel='stylesheet'>
-<link href='${contextPath}/css/fullcalendar.print.css' rel='stylesheet'
-	media='print'>
 <link href='${contextPath}/css/chosen.css' rel='stylesheet'>
 <link href='${contextPath}/css/uniform.default.css' rel='stylesheet'>
 <link href='${contextPath}/css/colorbox.css' rel='stylesheet'>
@@ -25,6 +22,7 @@
 	rel='stylesheet'>
 <link href='${contextPath}/css/opa-icons.css' rel='stylesheet'>
 <link href='${contextPath}/css/uploadify.css' rel='stylesheet'>
+<link href='${contextPath}/css/ui.multiselect.css' rel='stylesheet'>
 
 <style type="text/css">
  body {
@@ -70,22 +68,18 @@
 <script src="${contextPath}/js/bootstrap-carousel.js"></script>
 <!-- autocomplete library -->
 <script src="${contextPath}/js/bootstrap-typeahead.js"></script>
-<!-- tour library -->
-<script src="${contextPath}/js/bootstrap-tour.js"></script>
 <!-- library for cookie management -->
 <script src="${contextPath}/js/jquery.cookie.js"></script>
-<!-- calander plugin -->
-<script src='${contextPath}/js/fullcalendar.min.js'></script>
 <!-- data table plugin -->
 <script src='${contextPath}/js/jquery.dataTables.min.js'></script>
 
-<!-- chart libraries start -->
+<!-- chart libraries start 
 <script src="${contextPath}/js/excanvas.js"></script>
 <script src="${contextPath}/js/jquery.flot.min.js"></script>
 <script src="${contextPath}/js/jquery.flot.pie.min.js"></script>
 <script src="${contextPath}/js/jquery.flot.stack.js"></script>
 <script src="${contextPath}/js/jquery.flot.resize.min.js"></script>
-<!-- chart libraries end -->
+chart libraries end -->
 
 <!-- select or dropdown enhancer -->
 <script src="${contextPath}/js/jquery.chosen.min.js"></script>
@@ -103,12 +97,13 @@
 <script src="${contextPath}/js/jquery.raty.min.js"></script>
 <!-- for iOS style toggle switch -->
 <script src="${contextPath}/js/jquery.iphone.toggle.js"></script>
-<!-- autogrowing textarea plugin -->
-<script src="${contextPath}/js/jquery.autogrow-textarea.js"></script>
 <!-- multiple file upload plugin -->
 <script src="${contextPath}/js/jquery.uploadify-3.1.min.js"></script>
 <!-- history.js for cross-browser state change on ajax -->
 <script src="${contextPath}/js/jquery.history.js"></script>
+<!-- multiple select js -->
+<script src="${contextPath}/js/ui.multiselect.js"></script>
+<script src="${contextPath}/js/jquery.scrollTo.js"></script>
 <!-- application script for Charisma demo -->
 <script src="${contextPath}/js/charisma.js"></script>
 

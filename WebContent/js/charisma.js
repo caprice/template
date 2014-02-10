@@ -145,16 +145,10 @@ function docReady(){
 	//tooltip
 	$('[rel="tooltip"],[data-rel="tooltip"]').tooltip({"placement":"bottom",delay: { show: 400, hide: 200 }});
 
-	//auto grow textarea
-	$('textarea.autogrow').autogrow();
 
 	//popover
 	$('[rel="popover"],[data-rel="popover"]').popover();
 
-	//file manager
-	var elf = $('.file-manager').elfinder({
-		url : 'misc/elfinder-connector/connector.php'  // connector URL (REQUIRED)
-	}).elfinder('instance');
 
 	//iOS / iPhone style toggle switch
 	$('.iphone-toggle').iphoneStyle();
@@ -164,102 +158,6 @@ function docReady(){
 		score : 4 //default stars
 	});
 
-	//uploadify - multiple uploads
-	$('#file_upload').uploadify({
-		'swf'      : 'misc/uploadify.swf',
-		'uploader' : 'misc/uploadify.php'
-		// Put your options here
-	});
-
-	//gallery controlls container animation
-	$('ul.gallery li').hover(function(){
-		$('img',this).fadeToggle(1000);
-		$(this).find('.gallery-controls').remove();
-		$(this).append('<div class="well gallery-controls">'+
-							'<p><a href="#" class="gallery-edit btn"><i class="icon-edit"></i></a> <a href="#" class="gallery-delete btn"><i class="icon-remove"></i></a></p>'+
-						'</div>');
-		$(this).find('.gallery-controls').stop().animate({'margin-top':'-1'},400,'easeInQuint');
-	},function(){
-		$('img',this).fadeToggle(1000);
-		$(this).find('.gallery-controls').stop().animate({'margin-top':'-30'},200,'easeInQuint',function(){
-				$(this).remove();
-		});
-	});
-
-
-	//gallery image controls example
-	//gallery delete
-	$('.thumbnails').on('click','.gallery-delete',function(e){
-		e.preventDefault();
-		//get image id
-		//alert($(this).parents('.thumbnail').attr('id'));
-		$(this).parents('.thumbnail').fadeOut();
-	});
-	//gallery edit
-	$('.thumbnails').on('click','.gallery-edit',function(e){
-		e.preventDefault();
-		//get image id
-		//alert($(this).parents('.thumbnail').attr('id'));
-	});
-
-	//gallery colorbox
-	$('.thumbnail a').colorbox({rel:'thumbnail a', transition:"elastic", maxWidth:"95%", maxHeight:"95%"});
-
-	//gallery fullscreen
-	$('#toggle-fullscreen').button().click(function () {
-		var button = $(this), root = document.documentElement;
-		if (!button.hasClass('active')) {
-			$('#thumbnails').addClass('modal-fullscreen');
-			if (root.webkitRequestFullScreen) {
-				root.webkitRequestFullScreen(
-					window.Element.ALLOW_KEYBOARD_INPUT
-				);
-			} else if (root.mozRequestFullScreen) {
-				root.mozRequestFullScreen();
-			}
-		} else {
-			$('#thumbnails').removeClass('modal-fullscreen');
-			(document.webkitCancelFullScreen ||
-				document.mozCancelFullScreen ||
-				$.noop).apply(document);
-		}
-	});
-
-	//tour
-	if($('.tour').length && typeof(tour)=='undefined')
-	{
-		var tour = new Tour();
-		tour.addStep({
-			element: ".span10:first", /* html element next to which the step popover should be shown */
-			placement: "top",
-			title: "Custom Tour", /* title of the popover */
-			content: "You can create tour like this. Click Next." /* content of the popover */
-		});
-		tour.addStep({
-			element: ".theme-container",
-			placement: "left",
-			title: "Themes",
-			content: "You change your theme from here."
-		});
-		tour.addStep({
-			element: "ul.main-menu a:first",
-			title: "Dashboard",
-			content: "This is your dashboard from here you will find highlights."
-		});
-		tour.addStep({
-			element: "#for-is-ajax",
-			title: "Ajax",
-			content: "You can change if pages load with Ajax or not."
-		});
-		tour.addStep({
-			element: ".top-nav a:first",
-			placement: "bottom",
-			title: "Visit Site",
-			content: "Visit your front end from here."
-		});
-		
-		tour.restart();
-	}
 
 	
 
@@ -318,41 +216,6 @@ function docReady(){
 	});
 
 
-	//initialize the calendar
-	$('#calendar').fullCalendar({
-		header: {
-			left: 'prev,next today',
-			center: 'title',
-			right: 'month,agendaWeek,agendaDay'
-		},
-		editable: true,
-		droppable: true, // this allows things to be dropped onto the calendar !!!
-		drop: function(date, allDay) { // this function is called when something is dropped
-		
-			// retrieve the dropped element's stored Event Object
-			var originalEventObject = $(this).data('eventObject');
-			
-			// we need to copy it, so that multiple events don't have a reference to the same object
-			var copiedEventObject = $.extend({}, originalEventObject);
-			
-			// assign it the date that was reported
-			copiedEventObject.start = date;
-			copiedEventObject.allDay = allDay;
-			
-			// render the event on the calendar
-			// the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
-			$('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
-			
-			// is the "remove after drop" checkbox checked?
-			if ($('#drop-remove').is(':checked')) {
-				// if so, remove the element from the "Draggable Events" list
-				$(this).remove();
-			}
-			
-		}
-	});
-	
-	
 	//chart with points
 	if($("#sincos").length)
 	{

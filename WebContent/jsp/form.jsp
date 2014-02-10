@@ -194,7 +194,7 @@
 							  <div class="control-group">
 								<label class="control-label" for="selectError">Modern Select</label>
 								<div class="controls">
-								  <select id="selectError" data-rel="chosen">
+								  <select id="selectError" multiple data-rel="chosen">
 									<option>Option 1</option>
 									<option>Option 2</option>
 									<option>Option 3</option>

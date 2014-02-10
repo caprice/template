@@ -25,6 +25,10 @@
 
 		}
 	};
+	
+	$(function(){
+		$(".multiselect").multiselect();
+	})
 </script>
 <title>NGI Data</title>
 <body>
@@ -56,8 +60,76 @@
 			<div id="info" class="success"></div>
 			<div id="error" style="display:none"></div>
 		</div>		
-		<div class="cust box-content">
-								<table class="table table-striped table-bordered bootstrap-datatable datatable">
+		
+			<div class="row-fluid sortable">
+				<div class="box span12">
+					<div class="box-header well" data-original-title>
+						<h2><i class="icon-search"></i>Search</h2>
+						<div class="box-icon">
+							<a href="#" class="btn btn-setting btn-round"><i class="icon-cog"></i></a>
+							<a href="#" class="btn btn-minimize btn-round"><i class="icon-chevron-up"></i></a>
+							<a href="#" class="btn btn-close btn-round"><i class="icon-remove"></i></a>
+						</div>
+					</div>
+					<div class="box-content">
+						<form class="form-horizontal">
+							<fieldset>
+
+							  <div class="control-group">
+								<label class="control-label" for="vid">Vid:</label>
+								<div class="controls">
+								  <select id="vid">
+									<option>Option 1</option>
+									<option>Option 2</option>
+									<option>Option 3</option>
+									<option>Option 4</option>
+									<option>Option 5</option>
+								  </select>
+								</div>
+							  </div>
+							
+							  <div class="control-group">
+								<label class="control-label" for="focusedInput">Focused input</label>
+								<div class="controls">
+								  <input class="input-xlarge focused" id="focusedInput" type="text" value="This is focused…">
+								</div>
+							  </div>
+							  <div class="control-group">
+							  <div style="float:left;margin-left:12px;">Choose which params:</div>
+								<div id="sss">
+    							<select id="countries" class="multiselect"  multiple="multiple" name="countries[]">
+      							  <option value="AFG">Afghanistan</option>
+      							  <option value="ALB">Albania</option>
+        							<option value="DZA">Algeria</option>
+       								 <option value="AND">Andorra</option>
+       								 <option value="ARG">Argentina</option>
+      	 						 <option value="ARM">Armenia</option>
+       							 <option value="ABW">Aruba</option>
+        						<option value="AUS">Australia</option>
+
+      							</select>
+								</div>
+							</div>
+							<div class="control-group">
+							  <label class="control-label" for="date">Date:</label>
+							  <div class="controls">
+								<input type="text" class="input-xlarge datepicker" id="date">
+							  </div>
+							</div>							  				  
+							  <div class="form-actions">
+								<button type="submit" class="btn btn-primary">Search</button>
+							  </div>
+							</fieldset>
+						  </form>
+					</div>					
+					
+					
+				</div><!--/span-->
+
+		</div><!--/row-->
+    		
+		<div id="result" class="cust">
+						<table class="table table-striped table-bordered bootstrap-datatable datatable">
 						  <thead>
 							  <tr>
 								  <th>Serial Number</th>
@@ -76,8 +148,11 @@
 											<i class="icon-zoom-in icon-white"></i>  
 											View                                            
 										</a>
+										<a class="btn btn-danger" href="#">
+											<i class="icon-trash icon-white"></i> 
+											Delete
+										</a>										
 								   </td>   
-
 								</tr>
 							</c:forEach>
 						  </tbody>
