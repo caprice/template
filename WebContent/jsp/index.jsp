@@ -28,6 +28,72 @@
 	
 	$(function(){
 		$(".multiselect").multiselect();
+		$("#search").click(function(event){
+			event.preventDefault();
+			$('#result').html('');
+			var p_url = '${contextPath}' + '/data/showData.do';
+			$.ajax({
+				type : "POST",
+				url : p_url,
+		        dataType: "json",
+				success : function(response) {
+					if (response.result == 0) {
+						
+						var html = ['<table class="table table-striped table-bordered bootstrap-datatable datatable">'];
+						html.push('<thead>');
+						html.push('<tr>');
+						html.push('<th>Serial Number</th>');
+						html.push('<th>Data</th>');
+						html.push('<th>Actions</th>');
+						html.push('</tr>');
+						html.push('</thead>');
+						html.push(' <tbody>');
+						for(var i=0;i<response.data.length;i++){
+							item = response.data[i];
+							var objectId = item._id.time;
+							console.log(item);
+							html.push(' <tr>');
+							html.push(' <td class="center">'+i+'</td>');
+							html.push(' <td class="center" style="white-space:nowrap;overflow:hidden;">');
+							html.push(' <span class="label label-success">'+item.year+'-'+item.month+'-'+item.day+'  '+item.hours+':'+item.minutes+':'+item.seconds+'</span>');
+							html.push(' </td>');
+							html.push(' <td class="center">');
+							html.push(' <a class="btn btn-success" href="#" onclick="showDetail(\''+objectId+'\')">');
+							html.push(' <i class="icon-zoom-in icon-white"></i>  View');
+							html.push(' <a class="btn btn-danger" href="#"><i class="icon-trash icon-white"></i> Delete</a>');
+							html.push(' </td> ');
+							html.push(' </tr>');
+						}
+						html.push(' </tbody>');
+						html.push('  </table>  ');
+						$('#result').html(
+							html.join('')
+						);
+						//datatable
+						$('.datatable').dataTable({
+								"bPaginate": true, //翻页功能
+								"bLengthChange": true, //改变每页显示数据数量
+								"bFilter": false, //过滤功能
+								"bSort": false, //排序功能
+								"bInfo": true,//页脚信息
+								"bAutoWidth": false,//自动宽度
+								"sDom": "<'row-fluid'<'span12'l>r>t<'row-fluid'<'span12'i>p>",
+								"sPaginationType": "bootstrap",
+								"oLanguage": {
+								"sLengthMenu": "_MENU_ records per page"
+								}
+							} );
+						
+					} else {
+						$('#error').html("Please correct following errors: " + response.msg);
+						$('#info').show('hide');
+						$('#error').show('slow');
+
+					}
+				},
+			});
+			
+		});
 	})
 </script>
 <title>NGI Data</title>
@@ -76,14 +142,12 @@
 							<fieldset>
 
 							  <div class="control-group">
-								<label class="control-label" for="vid">Vid:</label>
+								<label class="control-label" for="vid">Vin:</label>
 								<div class="controls">
 								  <select id="vid">
-									<option>Option 1</option>
-									<option>Option 2</option>
-									<option>Option 3</option>
-									<option>Option 4</option>
-									<option>Option 5</option>
+								  	<c:forEach var="item" items="${vins}" varStatus="status">
+										<option value="${item.vin_2_9};${item.vin_10_17}">${item.vin_2_9}${item.vin_10_17}</option>	  	
+									</c:forEach>
 								  </select>
 								</div>
 							  </div>
@@ -117,7 +181,7 @@
 							  </div>
 							</div>							  				  
 							  <div class="form-actions">
-								<button type="submit" class="btn btn-primary">Search</button>
+								<button id="search" class="btn btn-primary">Search</button>
 							  </div>
 							</fieldset>
 						  </form>
@@ -129,34 +193,6 @@
 		</div><!--/row-->
     		
 		<div id="result" class="cust">
-						<table class="table table-striped table-bordered bootstrap-datatable datatable">
-						  <thead>
-							  <tr>
-								  <th>Serial Number</th>
-								  <th>Data</th>
-								  <th>Actions</th>
-							  </tr>
-						  </thead>   
-						  <tbody>
-						  	 <c:forEach var="item" items="${ngidata}" varStatus="status">
-						  	 		<td class="center">${status.count}</td>
-						  	 		<td class="center" style="white-space:nowrap;overflow:hidden;">
-										<span class="label label-success">${item.year}-${item.month}-${item.day} ${item.hours}:${item.minutes}:${item.seconds}</span>
-									</td> 
-									<td class="center">
-										<a class="btn btn-success" href="#" onclick="showDetail('${item._id}')">
-											<i class="icon-zoom-in icon-white"></i>  
-											View                                            
-										</a>
-										<a class="btn btn-danger" href="#">
-											<i class="icon-trash icon-white"></i> 
-											Delete
-										</a>										
-								   </td>   
-								</tr>
-							</c:forEach>
-						  </tbody>
-					  </table>   
 		</div>
 		<!-- content ends -->
 		</div><!--/#content.span10-->			

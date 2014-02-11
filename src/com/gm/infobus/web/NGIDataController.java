@@ -2,8 +2,10 @@ package com.gm.infobus.web;
 
 //import javax.inject.Inject;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,10 +52,63 @@ public class NGIDataController extends BaseController{
 	 * @throws IOException 
 	 */
 	@RequestMapping(value = "showData")
-	public String getNGIData(Map<String, List<DBObject>> map) throws IOException {
+	@ResponseBody
+	public JsonResponse getNGIData() throws IOException {
 		List<DBObject> dbObjs = service.getDBObjects("ngidata");
-		map.put("ngidata", dbObjs);
+		JsonResponse response = new JsonResponse();
+		response.setData(dbObjs);
+		response.setResult(ConstantUtils.JSON.RESULT_OK);
+		return response;
+	}
+	
+	/**
+	 * 
+	 * @param condition
+	 *            the condition
+	 * @return the object
+	 * @throws IOException 
+	 */
+	@RequestMapping(value = "init")
+	public String init(Map<String, Set<DBObject>> map) throws IOException {
+		List<DBObject> dbObjs = service.getValueByParam("ngidata", new String[]{"vin_2_9", "vin_10_17"});
+		Set<DBObject> dbObjRes = new HashSet<DBObject>();
+		if(dbObjs != null){
+			for(DBObject dbo : dbObjs){
+				dbObjRes.add(dbo);
+			}
+		}
+		map.put("vins", dbObjRes);
 		return "index";
+	}
+	
+	/**
+	 * 
+	 * @param condition
+	 *            the condition
+	 * @return the object
+	 * @throws IOException 
+	 */
+	@RequestMapping(value = "openNgiDataTemplateSetting")
+	public String openNgiDataTemplateSetting(Map<String, Set<DBObject>> map) throws IOException {
+		return "ngidatatmp";
+	}
+	
+	/**
+	 * 
+	 * @param condition
+	 *            the condition
+	 * @return the object
+	 * @throws IOException 
+	 */
+	@RequestMapping(value = "saveNgiDataTmp")
+	@ResponseBody
+	public JsonResponse saveNgiDataTmp() throws IOException {
+		String requestStr = IOUtils.toString(this.request.getInputStream());
+		DBObject dbObject = (DBObject)JSON.parse(requestStr);
+		JsonResponse response = new JsonResponse();
+		service.addIntoCollection("ngidatatmp", dbObject);
+		response.setResult(ConstantUtils.JSON.RESULT_OK);
+		return response;
 	}
 	
 	/**

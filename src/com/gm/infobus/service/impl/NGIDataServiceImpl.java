@@ -3,7 +3,6 @@ package com.gm.infobus.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +32,23 @@ public class NGIDataServiceImpl implements NGIDataService {
 	public DBObject getNGIRecordById(String id, String collectionName) {
 		
 		return dataDAO.get(id, collectionName);
+	}
+
+	@Override
+	public List<DBObject> getValueByParam(String collectionName, String[] params) {
+		Query query = new Query();  
+		query.fields().exclude("_id");
+		if(params != null){
+			for(String param : params){
+				query.fields().include(param);
+			}
+		}
+		return dataDAO.find(query, collectionName);
+	}
+
+	@Override
+	public void addIntoCollection(String colName, DBObject bean) {
+		dataDAO.save(bean, colName);
 	}
 
 }
