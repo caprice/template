@@ -10,5 +10,6 @@ public interface NGIDataService {
 	List<DBObject> getDBObjects(String collectionName);
 	DBObject getNGIRecordById(String id, String collectionName);
 	List<DBObject> getValueByParam(String collectionName, String[] params);
-	void addIntoCollection(String string, DBObject bean);
+	DBObject addIntoCollection(String collectionName, DBObject bean);
+	void dropCollection(String collectionName);
 }

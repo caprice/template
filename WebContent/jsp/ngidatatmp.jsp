@@ -93,7 +93,7 @@
 							<fieldset>
 							<div class="control-group">
 							  <div class="controls" style="margin-left:20px">
-								<textarea class="cleditor" id="template"  cols="90" rows="20"></textarea>
+								<textarea  id="template"  cols="90" rows="20" style="width:800px;height:400px"></textarea>
 							  </div>
 							</div>
 							<div class="form-actions">

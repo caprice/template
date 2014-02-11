@@ -31,6 +31,11 @@
 		$("#search").click(function(event){
 			event.preventDefault();
 			$('#result').html('');
+			var paramArray = [];
+			$("#params").find("option:selected").each(function(){
+				paramArray.push($(this).val());
+			});
+			
 			var p_url = '${contextPath}' + '/data/showData.do';
 			$.ajax({
 				type : "POST",
@@ -38,12 +43,14 @@
 		        dataType: "json",
 				success : function(response) {
 					if (response.result == 0) {
-						
 						var html = ['<table class="table table-striped table-bordered bootstrap-datatable datatable">'];
 						html.push('<thead>');
 						html.push('<tr>');
 						html.push('<th>Serial Number</th>');
-						html.push('<th>Data</th>');
+						html.push('<th>Date Time</th>');
+						for(var j=0;j<paramArray.length;j++){
+							html.push(' <th>'+paramArray[j]+'</th>');
+						}	
 						html.push('<th>Actions</th>');
 						html.push('</tr>');
 						html.push('</thead>');
@@ -51,12 +58,16 @@
 						for(var i=0;i<response.data.length;i++){
 							item = response.data[i];
 							var objectId = item._id.time;
-							console.log(item);
 							html.push(' <tr>');
 							html.push(' <td class="center">'+i+'</td>');
 							html.push(' <td class="center" style="white-space:nowrap;overflow:hidden;">');
 							html.push(' <span class="label label-success">'+item.year+'-'+item.month+'-'+item.day+'  '+item.hours+':'+item.minutes+':'+item.seconds+'</span>');
 							html.push(' </td>');
+							for(var j=0;j<paramArray.length;j++){
+								html.push(' <td class="center">');
+								html.push(' <span class="label label-success">'+evel(item.paramArray[j])+'</span>');
+								html.push(' </td>');								
+							}
 							html.push(' <td class="center">');
 							html.push(' <a class="btn btn-success" href="#" onclick="showDetail(\''+objectId+'\')">');
 							html.push(' <i class="icon-zoom-in icon-white"></i>  View');
@@ -159,18 +170,12 @@
 								</div>
 							  </div>
 							  <div class="control-group">
-							  <div style="float:left;margin-left:12px;">Choose which params:</div>
+							  <div style="float:left;margin-left:12px;">Choose params:</div>
 								<div id="sss">
-    							<select id="countries" class="multiselect"  multiple="multiple" name="countries[]">
-      							  <option value="AFG">Afghanistan</option>
-      							  <option value="ALB">Albania</option>
-        							<option value="DZA">Algeria</option>
-       								 <option value="AND">Andorra</option>
-       								 <option value="ARG">Argentina</option>
-      	 						 <option value="ARM">Armenia</option>
-       							 <option value="ABW">Aruba</option>
-        						<option value="AUS">Australia</option>
-
+    							<select id="params" class="multiselect"  multiple="multiple" name="params">
+								  	<c:forEach var="item" items="${params}" varStatus="status">
+										<option value="${item}">${item}</option>	  	
+									</c:forEach>
       							</select>
 								</div>
 							</div>

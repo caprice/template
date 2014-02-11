@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
@@ -94,6 +95,17 @@ public abstract class MongodbBaseDAO<T>{
 		mongoTemplate.save(bean, collectionName);
 		return bean;
 	}
+	
+	/**
+	 * 保存一个对象到mongodb
+	 * 
+	 * @param bean
+	 * @return
+	 */
+	public void clearCollection(String collectionName) {
+		mongoTemplate.dropCollection(collectionName);
+	}
+
 
 	/**
 	 * 通过ID获取记录

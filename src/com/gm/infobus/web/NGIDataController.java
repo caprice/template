@@ -69,13 +69,20 @@ public class NGIDataController extends BaseController{
 	 * @throws IOException 
 	 */
 	@RequestMapping(value = "init")
-	public String init(Map<String, Set<DBObject>> map) throws IOException {
+	public String init(Map<String, Object> map) throws IOException {
 		List<DBObject> dbObjs = service.getValueByParam("ngidata", new String[]{"vin_2_9", "vin_10_17"});
 		Set<DBObject> dbObjRes = new HashSet<DBObject>();
 		if(dbObjs != null){
 			for(DBObject dbo : dbObjs){
 				dbObjRes.add(dbo);
 			}
+		}
+		List<DBObject> configObjs = service.getDBObjects("ngidatatmp");
+		if(configObjs != null && !configObjs.isEmpty()){
+			DBObject configObj = configObjs.get(0);
+			configObj.removeField("_id");
+			Set<String> params = configObj.keySet();
+			map.put("params", params);
 		}
 		map.put("vins", dbObjRes);
 		return "index";
@@ -106,8 +113,11 @@ public class NGIDataController extends BaseController{
 		String requestStr = IOUtils.toString(this.request.getInputStream());
 		DBObject dbObject = (DBObject)JSON.parse(requestStr);
 		JsonResponse response = new JsonResponse();
-		service.addIntoCollection("ngidatatmp", dbObject);
+		service.dropCollection("ngidatatmp");
+		DBObject db_res = service.addIntoCollection("ngidatatmp", dbObject);
 		response.setResult(ConstantUtils.JSON.RESULT_OK);
+		response.setMsg("save successfullly.");
+		response.setData(db_res);
 		return response;
 	}
 	

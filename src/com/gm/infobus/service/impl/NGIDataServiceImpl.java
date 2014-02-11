@@ -47,8 +47,13 @@ public class NGIDataServiceImpl implements NGIDataService {
 	}
 
 	@Override
-	public void addIntoCollection(String colName, DBObject bean) {
-		dataDAO.save(bean, colName);
+	public DBObject addIntoCollection(String colName, DBObject bean) {
+		return dataDAO.save(bean, colName);
+	}
+
+	@Override
+	public void dropCollection(String collectionName) {
+		dataDAO.clearCollection(collectionName);
 	}
 
 }
