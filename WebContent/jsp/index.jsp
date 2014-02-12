@@ -6,10 +6,11 @@
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script type="text/javascript">
-	function showDetail(id){
+	function showDetail(vin_2_9, vin_10_17, year,  month, day, hours, minutes, seconds){
 		var p_url = '${contextPath}' + '/data/viewDetail.do';
 		$('#info').html('');
-		var data = 'id='+id;
+		var data = 'vin_2_9='+vin_2_9+"&"+'vin_10_17='+vin_10_17+"&"+'year='+year+"&"+'month='+month+"&"+'day='+day+"&"+'hours='+hours;
+		data = data + "&"+'minutes='+minutes+"&"+'seconds='+seconds;
 		doAjaxSubmit(p_url, data, p_callback);
 	}
 	p_callback = function(response) {
@@ -37,10 +38,12 @@
 			});
 			
 			var p_url = '${contextPath}' + '/data/showData.do';
+			var data = 'vinStr='+$("#vin").find("option:selected").val()+'&date='+$("#date").val();
 			$.ajax({
 				type : "POST",
 				url : p_url,
 		        dataType: "json",
+		        data: data,
 				success : function(response) {
 					if (response.result == 0) {
 						var html = ['<table class="table table-striped table-bordered bootstrap-datatable datatable">'];
@@ -69,7 +72,7 @@
 								html.push(' </td>');								
 							}
 							html.push(' <td class="center">');
-							html.push(' <a class="btn btn-success" href="#" onclick="showDetail(\''+objectId+'\')">');
+							html.push(' <a class="btn btn-success" href="#" onclick="showDetail(\''+item.vin_2_9+'\',\''+item.vin_10_17+'\',\''+item.year+'\',\''+item.month+'\',\''+item.day+'\',\''+item.hours+'\',\''+item.minutes+'\',\''+item.seconds+'\')">');
 							html.push(' <i class="icon-zoom-in icon-white"></i>  View');
 							html.push(' <a class="btn btn-danger" href="#"><i class="icon-trash icon-white"></i> Delete</a>');
 							html.push(' </td> ');
@@ -155,7 +158,7 @@
 							  <div class="control-group">
 								<label class="control-label" for="vid">Vin:</label>
 								<div class="controls">
-								  <select id="vid">
+								  <select id="vin">
 								  	<c:forEach var="item" items="${vins}" varStatus="status">
 										<option value="${item.vin_2_9};${item.vin_10_17}">${item.vin_2_9}${item.vin_10_17}</option>	  	
 									</c:forEach>
@@ -163,12 +166,6 @@
 								</div>
 							  </div>
 							
-							  <div class="control-group">
-								<label class="control-label" for="focusedInput">Focused input</label>
-								<div class="controls">
-								  <input class="input-xlarge focused" id="focusedInput" type="text" value="This is focused…">
-								</div>
-							  </div>
 							  <div class="control-group">
 							  <div style="float:left;margin-left:12px;">Choose params:</div>
 								<div id="sss">

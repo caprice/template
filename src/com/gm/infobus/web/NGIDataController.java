@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.gm.infobus.entity.SearchCritera;
 import com.gm.infobus.json.JsonResponse;
 import com.gm.infobus.service.NGIDataService;
 import com.gm.infobus.util.ConstantUtils;
@@ -53,8 +54,8 @@ public class NGIDataController extends BaseController{
 	 */
 	@RequestMapping(value = "showData")
 	@ResponseBody
-	public JsonResponse getNGIData() throws IOException {
-		List<DBObject> dbObjs = service.getDBObjects("ngidata");
+	public JsonResponse getNGIData(SearchCritera critera) throws IOException {
+		List<DBObject> dbObjs = service.getDBObjects("ngidata", critera);
 		JsonResponse response = new JsonResponse();
 		response.setData(dbObjs);
 		response.setResult(ConstantUtils.JSON.RESULT_OK);
@@ -130,9 +131,9 @@ public class NGIDataController extends BaseController{
 	 */
 	@RequestMapping(value = "viewDetail")
 	@ResponseBody
-	public JsonResponse viewDetail(String id) throws IOException {
+	public JsonResponse viewDetail(SearchCritera critera) throws IOException {
 		JsonResponse response = new JsonResponse();
-		DBObject obj =	service.getNGIRecordById(id, "ngidata");
+		DBObject obj =	service.getNGIRecordById(critera, "ngidata");
 		obj.removeField("_id");
 		obj.removeField("_class");
 		response.setResult(ConstantUtils.JSON.RESULT_OK);
