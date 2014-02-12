@@ -65,7 +65,7 @@
 							html.push(' </td>');
 							for(var j=0;j<paramArray.length;j++){
 								html.push(' <td class="center">');
-								html.push(' <span class="label label-success">'+evel(item.paramArray[j])+'</span>');
+								html.push(' <span class="label label-success">'+eval('item.'+paramArray[j])+'</span>');
 								html.push(' </td>');								
 							}
 							html.push(' <td class="center">');
