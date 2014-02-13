@@ -1,10 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<%@include file="common.jsp"%>
 <html>
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<%@include file="common.jsp"%>
 <script type="text/javascript">
 	function showDetail(vin_2_9, vin_10_17, year,  month, day, hours, minutes, seconds){
 		var p_url = '${contextPath}' + '/data/viewDetail.do';
@@ -39,6 +39,7 @@
 			
 			var p_url = '${contextPath}' + '/data/showData.do';
 			var data = 'vinStr='+$("#vin").find("option:selected").val()+'&date='+$("#date").val();
+			var loadi = layer.load('Loading…');
 			$.ajax({
 				type : "POST",
 				url : p_url,
@@ -46,6 +47,7 @@
 		        data: data,
 				success : function(response) {
 					if (response.result == 0) {
+						layer.close(loadi);
 						var html = ['<table class="table table-striped table-bordered bootstrap-datatable datatable">'];
 						html.push('<thead>');
 						html.push('<tr>');
@@ -60,7 +62,6 @@
 						html.push(' <tbody>');
 						for(var i=0;i<response.data.length;i++){
 							item = response.data[i];
-							var objectId = item._id.time;
 							html.push(' <tr>');
 							html.push(' <td class="center">'+i+'</td>');
 							html.push(' <td class="center" style="white-space:nowrap;overflow:hidden;">');
@@ -99,9 +100,8 @@
 							} );
 						
 					} else {
-						$('#error').html("Please correct following errors: " + response.msg);
-						$('#info').show('hide');
-						$('#error').show('slow');
+						layer.close(loadi);
+						layer.msg('Error occurring!', 2, -1);
 
 					}
 				},

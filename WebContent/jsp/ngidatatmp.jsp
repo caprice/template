@@ -6,57 +6,31 @@
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script type="text/javascript">
-	function showDetail(id){
-		var p_url = '${contextPath}' + '/data/viewDetail.do';
+$(function(){
+	$('#save').click(function(event){
+		event.preventDefault();
+		var p_url = '${contextPath}' + '/data/saveNgiDataTmp.do';
 		$('#info').html('');
-		var data = 'id='+id;
-		doAjaxSubmit(p_url, data, p_callback);
-	}
-	p_callback = function(response) {
-		if (response.result == 0) {
-			$('#info').html(response.data);
-			$('#error').hide('slow');
-			$('#info').show('slow');
-
-		} else {
-			$('#error').html("Please correct following errors: " + response.msg);
-			$('#info').hide('slow');
-			$('#error').show('slow');
-
-		}
-	};
-	$(function(){
-		$('#save').click(function(event){
-			event.preventDefault();
-			var p_url = '${contextPath}' + '/data/saveNgiDataTmp.do';
-			$('#info').html('');
-			var data = $('#template').val();
-			doAjaxSubmitJson(p_url, data, function(response){
-				if (response.result == 0) {
-					$('#info').html(response.data);
-					$('#error').hide('slow');
-					$('#info').show('slow');
-
-				} else {
-					$('#error').html("Please correct following errors: " + response.msg);
-					$('#info').hide('slow');
-					$('#error').show('slow');
-
-				}
-			});
+		var data = $('#template').val();
+		doAjaxSubmitJson(p_url, data, function(response){
+			if (response.result == 0) {
+				$('#info').html("Save successfully!");
+				$('#error').hide('slow');
+				$('#info').show('slow');
+			} else {
+				$('#info').html("Save Error!");
+				$('#error').hide('slow');
+				$('#info').show('slow');
+			}
 		});
-	})
+	});
+})
 </script>
 <title>NGI Data Template</title>
 <body>
 	<%@include file="header.jsp"%>
-		<div id="tip" class="tips" >
-			<div id="info" class="success"></div>
-			<div id="error" style="display:none"></div>
-		</div>
 		<div class="container-fluid">
 		<div class="row-fluid">
-						
 			<!-- left menu starts -->
 			<%@include file="leftmenu.jsp"%>
 			<!-- left menu ends -->
@@ -77,7 +51,10 @@
 			<div id="info" class="success"></div>
 			<div id="error" style="display:none"></div>
 		</div>		
-		
+				<div id="tip" class="tips" >
+			<div id="info" class="success"></div>
+			<div id="error" style="display:none"></div>
+		</div>
 			<div class="row-fluid sortable">
 				<div class="box span12">
 					<div class="box-header well" data-original-title>
@@ -110,9 +87,9 @@
 		</div><!--/row-->
 		<!-- content ends -->
 		</div><!--/#content.span10-->			
-			
 		</div><!--/fluid-row-->
 		<%@include file="footer.jsp"%>
 	</div><!--/.fluid-container-->
+</div>
 </body>
 </html>

@@ -41,7 +41,7 @@
 <!-- Placed at the end of the document so the pages load faster -->
 
 <!-- jQuery -->
-<script src="${contextPath}/js/jquery-1.7.2.min.js"></script>
+<script src="${contextPath}/js/jquery-1.8.2.min.js"></script>
 <!-- jQuery UI -->
 <script src="${contextPath}/js/jquery-ui-1.8.21.custom.min.js"></script>
 <!-- transition / effect library -->
@@ -104,8 +104,10 @@ chart libraries end -->
 <!-- multiple select js -->
 <script src="${contextPath}/js/ui.multiselect.js"></script>
 <script src="${contextPath}/js/jquery.scrollTo.js"></script>
-<!-- application script for Charisma demo -->
-<script src="${contextPath}/js/charisma.js"></script>
+<!-- layer js -->
+<script src="${contextPath}/layer/layer.min.js"></script>
+<!-- application script  -->
+<script src="${contextPath}/js/main.js"></script>
 
 <script type="text/javascript" src="${contextPath}/js/common.js"></script>
 
