@@ -15,6 +15,13 @@ public class SearchCritera {
 	private String hours;
 	private String minutes;
 	private String seconds;
+	private String uploadTime;
+	public String getUploadTime() {
+		return uploadTime;
+	}
+	public void setUploadTime(String uploadTime) {
+		this.uploadTime = uploadTime;
+	}
 	public final String getDate() {
 		return date;
 	}

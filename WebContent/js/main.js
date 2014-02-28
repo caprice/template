@@ -18,8 +18,17 @@ $(document).ready(function(){
 	
 	function switch_theme(theme_name)
 	{
-		$('#bs-css').attr('href','/ngi/css/bootstrap-'+theme_name+'.css');
+		var context = getContextPath();
+		$('#bs-css').attr('href',context+'/css/bootstrap-'+theme_name+'.css');
 	}
+	
+    function getContextPath(){
+        var contextPath = document.location.pathname;
+        var index =contextPath.substr(1).indexOf("/");
+        contextPath = contextPath.substr(0,index+1);
+        delete index;
+        return contextPath;
+   }
 	
 	//ajax menu checkbox
 	$('#is-ajax').click(function(e){
@@ -571,3 +580,28 @@ $.extend( $.fn.dataTableExt.oPagination, {
 		}
 	}
 });
+
+var formatDate = function(date, fmt) {
+    function pad(value) {
+        return (value.toString().length < 2) ? '0' + value : value;
+    }
+    return fmt.replace(/%([a-zA-Z])/g, function (_, fmtCode) {
+        switch (fmtCode) {
+        case 'Y':
+            return date.getFullYear();
+        case 'M':
+            return pad(date.getMonth() + 1);
+        case 'd':
+            return pad(date.getDate());
+        case 'H':
+            return pad(date.getHours());
+        case 'm':
+            return pad(date.getMinutes());
+        case 's':
+            return pad(date.getSeconds());
+        default:
+            throw new Error('Unsupported format code: ' + fmtCode);
+        }
+    });
+}
+

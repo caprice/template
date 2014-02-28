@@ -6,11 +6,10 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<%@include file="common.jsp"%>
 <script type="text/javascript">
-	function showDetail(vin_2_9, vin_10_17, year,  month, day, hours, minutes, seconds){
+	function showDetail(vin_2_9, vin_10_17, uploadTime){
 		var p_url = '${contextPath}' + '/data/viewDetail.do';
 		$('#info').html('');
-		var data = 'vin_2_9='+vin_2_9+"&"+'vin_10_17='+vin_10_17+"&"+'year='+year+"&"+'month='+month+"&"+'day='+day+"&"+'hours='+hours;
-		data = data + "&"+'minutes='+minutes+"&"+'seconds='+seconds;
+		var data = 'vin_2_9='+vin_2_9+"&"+'vin_10_17='+vin_10_17+"&"+'uploadTime='+uploadTime;
 		doAjaxSubmit(p_url, data, p_callback);
 	}
 	p_callback = function(response) {
@@ -65,7 +64,7 @@
 							html.push(' <tr>');
 							html.push(' <td class="center">'+i+'</td>');
 							html.push(' <td class="center" style="white-space:nowrap;overflow:hidden;">');
-							html.push(' <span class="label label-success">'+item.year+'-'+item.month+'-'+item.day+'  '+item.hours+':'+item.minutes+':'+item.seconds+'</span>');
+							html.push(' <span class="label label-success">'+formatDate(new Date(1000*(item.uploadTime/1000),"%H:%m:%s")+'</span>');
 							html.push(' </td>');
 							for(var j=0;j<paramArray.length;j++){
 								html.push(' <td class="center">');
@@ -73,9 +72,9 @@
 								html.push(' </td>');								
 							}
 							html.push(' <td class="center">');
-							html.push(' <a class="btn btn-success" href="#" onclick="showDetail(\''+item.vin_2_9+'\',\''+item.vin_10_17+'\',\''+item.year+'\',\''+item.month+'\',\''+item.day+'\',\''+item.hours+'\',\''+item.minutes+'\',\''+item.seconds+'\')">');
+							html.push(' <a class="btn btn-success" href="#" onclick="showDetail(\''+item.vin_2_9+'\',\''+item.vin_10_17+'\',\''+item.uploadTime+'\')">');
 							html.push(' <i class="icon-zoom-in icon-white"></i>  View');
-							html.push(' <a class="btn btn-danger" href="#"><i class="icon-trash icon-white"></i> Delete</a>');
+							//html.push(' <a class="btn btn-danger" href="#"><i class="icon-trash icon-white"></i> Delete</a>');
 							html.push(' </td> ');
 							html.push(' </tr>');
 						}

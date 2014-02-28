@@ -61,9 +61,8 @@ public class NGIDataServiceImpl implements NGIDataService {
 		Criteria c = Criteria.where("vin_2_9").is(StringUtils.isNumeric(critera.getVin2_9())? Integer.valueOf(critera.getVin2_9()):critera.getVin2_9())
 				.and("vin_10_17").is(StringUtils.isNumeric(critera.getVin10_17())? Integer.valueOf(critera.getVin10_17()):critera.getVin10_17());
 		if(!"".equals(critera.getDate())){
-			c.and("year").is(critera.getDateTime().getYear())
-			.and("month").is(critera.getDateTime().getMonthOfYear())
-			.and("day").is(critera.getDateTime().getDayOfMonth());
+			c.and("uploadTime").gte(critera.getDateTime().getMillis())
+			.lt(critera.getDateTime().getMillis()+24*60*60*1000);
 		}
 		query.addCriteria(c);
 		return dataDAO.find(query, collectionName);
@@ -74,12 +73,7 @@ public class NGIDataServiceImpl implements NGIDataService {
 		Query query = new Query();  
 		Criteria c = Criteria.where("vin_2_9").is(StringUtils.isNumeric(critera.getVin_2_9())? Integer.valueOf(critera.getVin_2_9()):critera.getVin_2_9())
 				.and("vin_10_17").is(StringUtils.isNumeric(critera.getVin_10_17())? Integer.valueOf(critera.getVin_10_17()):critera.getVin_10_17());
-			c.and("year").is(Integer.valueOf(critera.getYear()))
-			.and("month").is(Integer.valueOf(critera.getMonth()))
-			.and("day").is(Integer.valueOf(critera.getDay()))
-			.and("hours").is(Integer.valueOf(critera.getHours()))
-			.and("minutes").is(Integer.valueOf(critera.getMinutes()))
-			.and("seconds").is(Integer.valueOf(critera.getSeconds()));
+			c.and("uploadTime").is(Long.valueOf(critera.getUploadTime()));
 		query.addCriteria(c);
 		return dataDAO.findOne(query, collectionName);
 	}
