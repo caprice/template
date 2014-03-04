@@ -97,6 +97,15 @@ public abstract class MongodbBaseDAO<T>{
 	}
 	
 	/**
+	 * 
+	 * @param bean
+	 * @return
+	 */
+	public void batchInsert(List<T> list, String collectionName) {
+		mongoTemplate.insert(list, collectionName);
+	}
+	
+	/**
 	 * 保存一个对象到mongodb
 	 * 
 	 * @param bean

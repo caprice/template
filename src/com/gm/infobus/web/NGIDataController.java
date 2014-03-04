@@ -2,10 +2,13 @@ package com.gm.infobus.web;
 
 //import javax.inject.Inject;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import net.sf.json.JSONArray;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +41,14 @@ public class NGIDataController extends BaseController{
 	@ResponseBody
 	public JsonResponse uploadData() throws IOException {
 		String requestStr = IOUtils.toString(this.request.getInputStream());
-		DBObject dbObject = (DBObject)JSON.parse(requestStr);
+		JSONArray jsonArr = JSONArray.fromObject(requestStr);
+		List<DBObject> list = new ArrayList<DBObject>();
+		for(int i=0;i<jsonArr.size();i++){
+			DBObject dbObject = (DBObject)JSON.parse(jsonArr.getJSONObject(i).toString());
+			list.add(dbObject);
+		}
 		JsonResponse response = new JsonResponse();
-		service.uploadNGIData(dbObject, "ngidata");
+		service.batchInsertIntoCollection(list, "ngidata");
 		response.setResult(ConstantUtils.JSON.RESULT_OK);
 		return response;
 	}

@@ -64,7 +64,7 @@
 							html.push(' <tr>');
 							html.push(' <td class="center">'+i+'</td>');
 							html.push(' <td class="center" style="white-space:nowrap;overflow:hidden;">');
-							html.push(' <span class="label label-success">'+formatDate(new Date(1000*(item.uploadTime/1000),"%H:%m:%s")+'</span>');
+							html.push(' <span class="label label-success">'+formatDate(new Date(1000*(item.uploadTime/1000)),"%H:%m:%s")+'</span>');
 							html.push(' </td>');
 							for(var j=0;j<paramArray.length;j++){
 								html.push(' <td class="center">');
