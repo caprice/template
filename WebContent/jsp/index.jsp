@@ -28,6 +28,14 @@
 	
 	$(function(){
 		$(".multiselect").multiselect();
+		$("#type").change(function(){
+			 var selected = $(this).children('option:selected').val();
+			 if(selected == "getVehicleDataWithTimer"){
+				 $("#interval").show();
+			 }else{
+				 $("#interval").hide();
+			 }
+		});
 		$("#search").click(function(event){
 			event.preventDefault();
 			$('#result').html('');
@@ -37,7 +45,7 @@
 			});
 			
 			var p_url = '${contextPath}' + '/data/showData.do';
-			var data = 'vinStr='+$("#vin").find("option:selected").val()+'&date='+$("#date").val();
+			var data = 'vinStr='+$("#vin").find("option:selected").val()+'&date='+$("#date").val()+'&type='+$("#type").find("option:selected").val()+'&interval='+$("#intervalSel").find("option:selected").val();
 			var loadi = layer.load('Loading…');
 			$.ajax({
 				type : "POST",
@@ -51,7 +59,8 @@
 						html.push('<thead>');
 						html.push('<tr>');
 						html.push('<th>Serial Number</th>');
-						html.push('<th>Date Time</th>');
+						html.push('<th>upload Date Time</th>');
+						html.push('<th>server Time</th>');
 						for(var j=0;j<paramArray.length;j++){
 							html.push(' <th>'+paramArray[j]+'</th>');
 						}	
@@ -63,8 +72,11 @@
 							item = response.data[i];
 							html.push(' <tr>');
 							html.push(' <td class="center">'+i+'</td>');
-							html.push(' <td class="center" style="white-space:nowrap;overflow:hidden;">');
-							html.push(' <span class="label label-success">'+formatDate(new Date(1000*(item.uploadTime/1000)),"%H:%m:%s")+'</span>');
+							html.push(' <td class="center" >');
+							html.push(' <span class="label label-success">'+formatDate(new Date(item.uploadTime),"%H:%m:%s:%S")+'</span>');
+							html.push(' </td>');
+							html.push(' <td class="center">');
+							html.push(' <span class="label label-success">'+formatDate(new Date(item.serverTime),"%H:%m:%s:%S")+'</span>');
 							html.push(' </td>');
 							for(var j=0;j<paramArray.length;j++){
 								html.push(' <td class="center">');
@@ -175,13 +187,36 @@
       							</select>
 								</div>
 							</div>
-							<div class="control-group">
-							  <label class="control-label" for="date">Date:</label>
+							<div class="control-group" style="float:left">
+							  <label class="control-label" for="date">upload date:</label>
 							  <div class="controls">
 								<input type="text" class="input-xlarge datepicker" id="date">
 							  </div>
-							</div>							  				  
-							  <div class="form-actions">
+							</div>		
+				  				
+				  			<div class="control-group"  style="float:left">
+								<label class="control-label" for="type">The API of get data:</label>
+								<div class="controls">
+								  <select id="type">
+										<option value="all">All</option>	  	
+										<option value="watchVehicleData">watchVehicleData</option>	  	
+										<option value="getVehicleDataWithTimer">getVehicleDataWithTimer</option>
+								 </select>	  	
+								</div>
+							  </div>	
+				  			<div class="control-group" id="interval" style="display:none">
+								<label class="control-label" for="interval">interval(millis):</label>
+								<div class="controls">
+								  <select id="intervalSel">
+										<option value=""></option>	  	
+										<option value="100">100</option>	  	
+										<option value="1000">1000</option>	  	
+										<option value="2000">2000</option>	  	
+										<option value="5000">5000</option>	  	
+								 </select>	  	
+								</div>
+							  </div>							    
+							  <div class="form-actions" style="clear:both">
 								<button id="search" class="btn btn-primary">Search</button>
 							  </div>
 							</fieldset>

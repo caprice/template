@@ -61,10 +61,15 @@ public class NGIDataServiceImpl implements NGIDataService {
 	@Override
 	public List<DBObject> getDBObjects(String collectionName, SearchCritera critera) {
 		Query query = new Query();
-		Criteria c = Criteria.where("vin_2_9").is(StringUtils.isNumeric(critera.getVin2_9()) ? Integer.valueOf(critera.getVin2_9()) : critera.getVin2_9()).and("vin_10_17")
-				.is(StringUtils.isNumeric(critera.getVin10_17()) ? Integer.valueOf(critera.getVin10_17()) : critera.getVin10_17());
+		Criteria c = Criteria.where("vin_2_9").is(critera.getVin2_9()).and("vin_10_17").is(critera.getVin10_17());
 		if (!"".equals(critera.getDate())) {
 			c.and("uploadTime").gte(critera.getDateTime().getMillis()).lt(critera.getDateTime().getMillis() + 24 * 60 * 60 * 1000);
+		}
+		if(!"all".equals(critera.getType())){
+			c.and("type").is(critera.getType());
+		}
+		if(!"".equals(critera.getInterval())){
+			c.and("interval").is(critera.getInterval());
 		}
 		query.addCriteria(c);
 		return dataDAO.find(query, collectionName);
@@ -73,8 +78,7 @@ public class NGIDataServiceImpl implements NGIDataService {
 	@Override
 	public DBObject getNGIRecordById(SearchCritera critera, String collectionName) {
 		Query query = new Query();
-		Criteria c = Criteria.where("vin_2_9").is(StringUtils.isNumeric(critera.getVin_2_9()) ? Integer.valueOf(critera.getVin_2_9()) : critera.getVin_2_9()).and("vin_10_17")
-				.is(StringUtils.isNumeric(critera.getVin_10_17()) ? Integer.valueOf(critera.getVin_10_17()) : critera.getVin_10_17());
+		Criteria c = Criteria.where("vin_2_9").is(critera.getVin_2_9()).and("vin_10_17").is(critera.getVin_10_17());
 		c.and("uploadTime").is(Long.valueOf(critera.getUploadTime()));
 		query.addCriteria(c);
 		return dataDAO.findOne(query, collectionName);

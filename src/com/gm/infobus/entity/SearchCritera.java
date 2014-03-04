@@ -16,6 +16,8 @@ public class SearchCritera {
 	private String minutes;
 	private String seconds;
 	private String uploadTime;
+	private String type;
+	private String interval;
 	public String getUploadTime() {
 		return uploadTime;
 	}
@@ -99,6 +101,18 @@ public class SearchCritera {
 	}
 	public final void setSeconds(String seconds) {
 		this.seconds = seconds;
+	}
+	public final String getType() {
+		return type;
+	}
+	public final void setType(String type) {
+		this.type = type;
+	}
+	public final String getInterval() {
+		return interval;
+	}
+	public final void setInterval(String interval) {
+		this.interval = interval;
 	}
 	
 }

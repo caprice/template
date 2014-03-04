@@ -3,6 +3,7 @@ package com.gm.infobus.web;
 //import javax.inject.Inject;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -40,11 +41,13 @@ public class NGIDataController extends BaseController{
 	@RequestMapping(value = "upload")
 	@ResponseBody
 	public JsonResponse uploadData() throws IOException {
+		long nowTimeMillis = Calendar.getInstance().getTimeInMillis();
 		String requestStr = IOUtils.toString(this.request.getInputStream());
 		JSONArray jsonArr = JSONArray.fromObject(requestStr);
 		List<DBObject> list = new ArrayList<DBObject>();
 		for(int i=0;i<jsonArr.size();i++){
 			DBObject dbObject = (DBObject)JSON.parse(jsonArr.getJSONObject(i).toString());
+			dbObject.put("serverTime", nowTimeMillis);
 			list.add(dbObject);
 		}
 		JsonResponse response = new JsonResponse();

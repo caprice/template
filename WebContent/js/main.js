@@ -599,6 +599,8 @@ var formatDate = function(date, fmt) {
             return pad(date.getMinutes());
         case 's':
             return pad(date.getSeconds());
+        case 'S':
+        	return pad(date.getMilliseconds());
         default:
             throw new Error('Unsupported format code: ' + fmtCode);
         }
