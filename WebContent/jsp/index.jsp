@@ -219,7 +219,7 @@
 							  </div>							    
 							  <div class="form-actions" style="clear:both">
 								<button id="search" class="btn btn-primary">Search</button>
-								<input type="submit" id="exportExcel" class="btn btn-primary">Export to Excel</button>
+								<input type="submit" id="exportExcel" class="btn btn-primary" value="Export to Excel"/>
 							  </div>
 							</fieldset>
 						  </form>
