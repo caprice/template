@@ -4,18 +4,26 @@ package com.gm.infobus.web;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import net.sf.json.JSONArray;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.gm.infobus.entity.SearchCritera;
 import com.gm.infobus.json.JsonResponse;
@@ -151,5 +159,31 @@ public class NGIDataController extends BaseController{
 		response.setData(obj.toString());
 		return response;
 	}
+	
+	  /** 
+		* @Title: exportExcel 
+		* @Description: 导出用户数据生成的excel文件
+		* @param  model
+		* @param  request
+		* @param  response
+		* @param  设定文件 
+		* @return ModelAndView    返回类型 
+		* @throws 
+		*/
+		@RequestMapping(value="/exportExcel",method=RequestMethod.POST)  
+	    public ModelAndView exportExcel(ModelMap model, HttpServletRequest request, HttpServletResponse response) {  
+	       ViewExcel viewExcel = new ViewExcel();    
+	       Map<String, Object> obj = null;
+	       
+	       Map<String, Object> condition = new HashMap<String, Object>();
+	       HSSFWorkbook workbook = activityManageService.generateWorkbook(condition);
+	       try {
+	    	   viewExcel.buildExcelDocument(obj, workbook, request, response);
+	       } catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+	       }
+	       return new ModelAndView(viewExcel, model);   
+	   }  
 	
 }
