@@ -25,6 +25,13 @@
 		</property>
 	</bean>
 
+ <bean class="org.springframework.web.servlet.view.XmlViewResolver">
+     <property name="location">
+         <value>/WEB-INF/spring-excel-views.xml</value>
+     </property>
+     <property name="order" value="0" />
+  </bean>
+    
 	<bean id="jacksonHttpMessageConverter"
 		class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter ">
 		<property name="supportedMediaTypes">

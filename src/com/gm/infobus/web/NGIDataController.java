@@ -16,6 +16,9 @@ import javax.servlet.http.HttpServletResponse;
 import net.sf.json.JSONArray;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -171,19 +174,13 @@ public class NGIDataController extends BaseController{
 		* @throws 
 		*/
 		@RequestMapping(value="/exportExcel",method=RequestMethod.POST)  
-	    public ModelAndView exportExcel(ModelMap model, HttpServletRequest request, HttpServletResponse response) {  
-	       ViewExcel viewExcel = new ViewExcel();    
-	       Map<String, Object> obj = null;
-	       
-	       Map<String, Object> condition = new HashMap<String, Object>();
-	       HSSFWorkbook workbook = activityManageService.generateWorkbook(condition);
-	       try {
-	    	   viewExcel.buildExcelDocument(obj, workbook, request, response);
-	       } catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-	       }
-	       return new ModelAndView(viewExcel, model);   
-	   }  
+	    public String exportExcel(ModelMap model, SearchCritera critera) {  
+		   List<DBObject> dbObjs = service.getDBObjects("ngidata", critera);
+		   model.put("dataList", dbObjs);
+		   String params = critera.getParams();
+		   model.put("params", params);
+	       return "exportExcel";   
+	   }
+
 	
 }

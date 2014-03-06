@@ -119,7 +119,8 @@
 			});
 			
 		});
-	})
+		
+	});
 </script>
 <title>NGI Data</title>
 <body>
@@ -163,13 +164,13 @@
 						</div>
 					</div>
 					<div class="box-content">
-						<form class="form-horizontal">
+						<form class="form-horizontal" method="post" action="${contextPath}/data/exportExcel.do">
 							<fieldset>
 
 							  <div class="control-group">
 								<label class="control-label" for="vid">Vin:</label>
 								<div class="controls">
-								  <select id="vin">
+								  <select id="vin" name="vinStr">
 								  	<c:forEach var="item" items="${vins}" varStatus="status">
 										<option value="${item.vin_2_9};${item.vin_10_17}">${item.vin_2_9}${item.vin_10_17}</option>	  	
 									</c:forEach>
@@ -190,14 +191,14 @@
 							<div class="control-group" style="float:left">
 							  <label class="control-label" for="date">upload date:</label>
 							  <div class="controls">
-								<input type="text" class="input-xlarge datepicker" id="date">
+								<input type="text" class="input-xlarge datepicker" id="date" name="date">
 							  </div>
 							</div>		
 				  				
 				  			<div class="control-group"  style="float:left">
 								<label class="control-label" for="type">The API of get data:</label>
 								<div class="controls">
-								  <select id="type">
+								  <select id="type" name="type">
 										<option value="all">All</option>	  	
 										<option value="watchVehicleData">watchVehicleData</option>	  	
 										<option value="getVehicleDataWithTimer">getVehicleDataWithTimer</option>
@@ -207,7 +208,7 @@
 				  			<div class="control-group" id="interval" style="display:none">
 								<label class="control-label" for="interval">interval(millis):</label>
 								<div class="controls">
-								  <select id="intervalSel">
+								  <select id="intervalSel" name="intervalSel">
 										<option value=""></option>	  	
 										<option value="100">100</option>	  	
 										<option value="1000">1000</option>	  	
@@ -218,6 +219,7 @@
 							  </div>							    
 							  <div class="form-actions" style="clear:both">
 								<button id="search" class="btn btn-primary">Search</button>
+								<input type="submit" id="exportExcel" class="btn btn-primary">Export to Excel</button>
 							  </div>
 							</fieldset>
 						  </form>

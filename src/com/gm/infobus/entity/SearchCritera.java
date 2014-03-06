@@ -18,6 +18,13 @@ public class SearchCritera {
 	private String uploadTime;
 	private String type;
 	private String interval;
+	private String params;
+	public String getParams() {
+		return params;
+	}
+	public void setParams(String params) {
+		this.params = params;
+	}
 	public String getUploadTime() {
 		return uploadTime;
 	}

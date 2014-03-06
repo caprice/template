@@ -2,6 +2,7 @@ package com.gm.infobus.web;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import net.sf.json.JSONObject;
@@ -38,6 +39,7 @@ public abstract class BaseController {
 
 	@Autowired
 	protected HttpServletRequest request;
+	protected HttpServletResponse response;
 
 	/**
 	 * 转JSON格式.
