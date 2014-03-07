@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -56,7 +57,7 @@ public class ViewExcel extends AbstractExcelView {
 
 		// index cell
 		cell = row.createCell(1);
-		cell.setCellType(HSSFCell.CELL_TYPE_STRING);
+		cell.setCellType(HSSFCell.CELL_TYPE_NUMERIC);
 		cell.setCellValue(" upload date Time");
 
 		// 写入各个字段的名称
@@ -77,7 +78,7 @@ public class ViewExcel extends AbstractExcelView {
 			//
 			// index
 			cell = row.createCell(1);
-			cell.setCellType(HSSFCell.CELL_TYPE_STRING);
+			cell.setCellType(HSSFCell.CELL_TYPE_NUMERIC);
 			DBObject dbObj = dbObjs.get(i);
 			Object o = dbObj.get("uploadTime");
 			String cellVal = "";
@@ -87,14 +88,17 @@ public class ViewExcel extends AbstractExcelView {
 			cell.setCellValue(cellVal);
 			for (int j = 1; j <= nColumn; j++) {
 				cell = row.createCell(j + 1);
-				cell.setCellType(HSSFCell.CELL_TYPE_STRING);
 				DBObject oj = dbObjs.get(i);
 				Object obj = oj.get(columns[j - 1]);
 				String cellVal1 = "";
 				if (obj != null) {
 					cellVal1 = obj.toString();
+					if(StringUtils.isNumeric(cellVal1)){
+						cell.setCellValue(Double.valueOf(cellVal1));
+					}else{
+						cell.setCellValue(cellVal1);
+					}
 				}
-				cell.setCellValue(cellVal1);
 			}
 			iRow++;
 		}
