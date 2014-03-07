@@ -68,6 +68,7 @@
 						html.push('</tr>');
 						html.push('</thead>');
 						html.push(' <tbody>');
+						var item;
 						for(var i=0;i<response.data.length;i++){
 							item = response.data[i];
 							html.push(' <tr>');
