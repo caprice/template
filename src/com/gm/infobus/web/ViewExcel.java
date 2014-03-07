@@ -12,11 +12,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.web.servlet.view.document.AbstractExcelView;
 
+import com.gm.infobus.util.NumberValidationUtils;
 import com.mongodb.DBObject;
 
 public class ViewExcel extends AbstractExcelView {
@@ -93,11 +95,14 @@ public class ViewExcel extends AbstractExcelView {
 				String cellVal1 = "";
 				if (obj != null) {
 					cellVal1 = obj.toString();
-					if(StringUtils.isNumeric(cellVal1)){
-						cell.setCellValue(Double.valueOf(cellVal1));
+					if(NumberValidationUtils.isDecimal(cellVal1)||NumberValidationUtils.isWholeNumber(cellVal1)){
+						cell.setCellValue(Double.parseDouble(cellVal1));
+						cell.setCellType(HSSFCell.CELL_TYPE_NUMERIC);
 					}else{
-						cell.setCellValue(cellVal1);
+						cell.setCellValue(new HSSFRichTextString(cellVal1));
 					}
+				}else{
+					cell.setCellValue(new HSSFRichTextString(cellVal1));
 				}
 			}
 			iRow++;
