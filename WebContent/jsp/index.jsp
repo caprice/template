@@ -74,14 +74,26 @@
 							html.push(' <tr>');
 							html.push(' <td class="center">'+i+'</td>');
 							html.push(' <td class="center" >');
-							html.push(' <span class="label label-success">'+formatDate(new Date(item.uploadTime),"%H:%m:%s:%S")+'</span>');
+							if("uploadTime" in item){
+								html.push(' <span class="label label-success">'+formatDate(new Date(item.uploadTime),"%H:%m:%s:%S")+'</span>');
+							}else{
+								html.push(' <span class="label-success"></span>');
+							}
 							html.push(' </td>');
 							html.push(' <td class="center">');
-							html.push(' <span class="label label-success">'+formatDate(new Date(item.serverTime),"%H:%m:%s:%S")+'</span>');
+							if("serverTime" in item){
+								html.push(' <span class="label label-success">'+formatDate(new Date(item.serverTime),"%H:%m:%s:%S")+'</span>');
+							}else{
+								html.push(' <span class="label-success"></span>');
+							}
 							html.push(' </td>');
 							for(var j=0;j<paramArray.length;j++){
 								html.push(' <td class="center">');
-								html.push(' <span class="label label-success">'+eval('item.'+paramArray[j])+'</span>');
+								if(paramArray[j] in item){
+									html.push(' <span class="label label-success">'+eval('item.'+paramArray[j])+'</span>');
+								}else{
+									html.push(' <span class="label-success"></span>');
+								}
 								html.push(' </td>');								
 							}
 							html.push(' <td class="center">');
