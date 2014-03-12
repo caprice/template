@@ -6,10 +6,10 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<%@include file="common.jsp"%>
 <script type="text/javascript">
-	function showDetail(vin_2_9, vin_10_17, uploadTime){
+	function showDetail(time, isNew, machine, timeSecond, inc){
 		var p_url = '${contextPath}' + '/data/viewDetail.do';
 		$('#info').html('');
-		var data = 'vin_2_9='+vin_2_9+"&"+'vin_10_17='+vin_10_17+"&"+'uploadTime='+uploadTime;
+		var data = 'time='+time/1000+"&"+'isNew='+isNew+"&"+'machine='+machine+"&"+'timeSecond='+timeSecond+"&"+'inc='+inc;
 		doAjaxSubmit(p_url, data, p_callback);
 	}
 	p_callback = function(response) {
@@ -85,7 +85,7 @@
 								html.push(' </td>');								
 							}
 							html.push(' <td class="center">');
-							html.push(' <a class="btn btn-success" href="#" onclick="showDetail(\''+item.vin_2_9+'\',\''+item.vin_10_17+'\',\''+item.uploadTime+'\')">');
+							html.push(' <a class="btn btn-success" href="#" onclick="showDetail('+item._id.time+','+item._id["new"]+','+item._id.machine+','+item._id.timeSecond+','+item._id.inc+')">');
 							html.push(' <i class="icon-zoom-in icon-white"></i>  View');
 							//html.push(' <a class="btn btn-danger" href="#"><i class="icon-trash icon-white"></i> Delete</a>');
 							html.push(' </td> ');

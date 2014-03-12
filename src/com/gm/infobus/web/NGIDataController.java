@@ -4,29 +4,21 @@ package com.gm.infobus.web;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import net.sf.json.JSONArray;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.gm.infobus.entity.SearchCritera;
 import com.gm.infobus.json.JsonResponse;
@@ -153,9 +145,10 @@ public class NGIDataController extends BaseController{
 	 */
 	@RequestMapping(value = "viewDetail")
 	@ResponseBody
-	public JsonResponse viewDetail(SearchCritera critera) throws IOException {
+	public JsonResponse viewDetail(int time, boolean isNew, int machine, long timeSecond, int inc) throws IOException {
 		JsonResponse response = new JsonResponse();
-		DBObject obj =	service.getNGIRecordById(critera, "ngidata");
+		ObjectId objId = new ObjectId(time,machine, inc);
+		DBObject obj =	service.getNGIRecordById(objId.toString(), "ngidata");
 		obj.removeField("_id");
 		obj.removeField("_class");
 		response.setResult(ConstantUtils.JSON.RESULT_OK);

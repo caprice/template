@@ -2,7 +2,6 @@ package com.gm.infobus.service.impl;
 
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -76,10 +75,9 @@ public class NGIDataServiceImpl implements NGIDataService {
 	}
 
 	@Override
-	public DBObject getNGIRecordById(SearchCritera critera, String collectionName) {
+	public DBObject getNGIRecordById(String id, String collectionName) {
 		Query query = new Query();
-		Criteria c = Criteria.where("vin_2_9").is(critera.getVin_2_9()).and("vin_10_17").is(critera.getVin_10_17());
-		c.and("uploadTime").is(Long.valueOf(critera.getUploadTime()));
+		Criteria c = Criteria.where("_id").is(id);
 		query.addCriteria(c);
 		return dataDAO.findOne(query, collectionName);
 	}
