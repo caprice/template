@@ -3,6 +3,7 @@ package com.gm.infobus.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -71,6 +72,7 @@ public class NGIDataServiceImpl implements NGIDataService {
 			c.and("interval").is(critera.getInterval());
 		}
 		query.addCriteria(c);
+		query.with(new Sort(Sort.Direction.ASC, "uploadTime"));
 		return dataDAO.find(query, collectionName);
 	}
 
