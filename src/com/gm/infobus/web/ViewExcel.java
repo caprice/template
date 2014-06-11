@@ -46,6 +46,7 @@ public class ViewExcel extends AbstractExcelView {
 		} else {
 			columns = params.split(",");
 		}
+		
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		HSSFSheet sheet = workbook.createSheet("ngiData");
 		// workbook.setSheetName(0,sheetName,HSSFWorkbook..ENCODING_UTF_16);
@@ -85,7 +86,7 @@ public class ViewExcel extends AbstractExcelView {
 			Object o = dbObj.get("uploadTime");
 			String cellVal = "";
 			if (o != null) {
-				cellVal = new SimpleDateFormat("HH:mm:ss:SSS").format(new Date(Long.valueOf(o.toString())));
+				cellVal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date(Long.valueOf(o.toString())));
 			}
 			cell.setCellValue(cellVal);
 			for (int j = 1; j <= nColumn; j++) {
