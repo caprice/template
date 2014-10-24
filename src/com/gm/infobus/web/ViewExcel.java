@@ -19,6 +19,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.web.servlet.view.document.AbstractExcelView;
 
 import com.gm.infobus.util.NumberValidationUtils;
+import com.google.common.collect.Lists;
 import com.mongodb.DBObject;
 
 public class ViewExcel extends AbstractExcelView {
@@ -46,68 +47,73 @@ public class ViewExcel extends AbstractExcelView {
 		} else {
 			columns = params.split(",");
 		}
-		
 		HSSFWorkbook workbook = new HSSFWorkbook();
-		HSSFSheet sheet = workbook.createSheet("ngiData");
-		// workbook.setSheetName(0,sheetName,HSSFWorkbook..ENCODING_UTF_16);
-		HSSFRow row = sheet.createRow((short) 0);
-		HSSFCell cell = null;
-		int nColumn = columns.length;
-		// index cell
-		cell = row.createCell(0);
-		cell.setCellType(HSSFCell.CELL_TYPE_STRING);
-		cell.setCellValue("index");
-
-		// index cell
-		cell = row.createCell(1);
-		cell.setCellType(HSSFCell.CELL_TYPE_NUMERIC);
-		cell.setCellValue(" upload date Time");
-
-		// 写入各个字段的名称
-		for (int i = 1; i <= nColumn; i++) {
-			cell = row.createCell((i + 1));
-			cell.setCellType(HSSFCell.CELL_TYPE_STRING);
-			cell.setCellValue(columns[i - 1]);
-		}
-
-		// 写入各条记录，每条记录对应Excel中的一行
-		for (int i = 0; i < dbObjs.size(); i++) {
-			int iRow = i + 1;
-			row = sheet.createRow((short) iRow);
-			// index
+		if(dbObjs == null) return workbook;
+		List<List<DBObject>> groupList = Lists.partition(dbObjs, 10000);
+		for(int p = 0; p< groupList.size();p++){
+			List<DBObject> subList = groupList.get(p);
+			HSSFSheet sheet = workbook.createSheet("ngiData"+p);
+			// workbook.setSheetName(0,sheetName,HSSFWorkbook..ENCODING_UTF_16);
+			HSSFRow row = sheet.createRow((short) 0);
+			HSSFCell cell = null;
+			int nColumn = columns.length;
+			// index cell
 			cell = row.createCell(0);
 			cell.setCellType(HSSFCell.CELL_TYPE_STRING);
-			cell.setCellValue(i + 1);
-			//
-			// index
+			cell.setCellValue("index");
+
+			// index cell
 			cell = row.createCell(1);
 			cell.setCellType(HSSFCell.CELL_TYPE_NUMERIC);
-			DBObject dbObj = dbObjs.get(i);
-			Object o = dbObj.get("uploadTime");
-			String cellVal = "";
-			if (o != null) {
-				cellVal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date(Long.valueOf(o.toString())));
+			cell.setCellValue(" upload date Time");
+
+			// 写入各个字段的名称
+			for (int i = 1; i <= nColumn; i++) {
+				cell = row.createCell((i + 1));
+				cell.setCellType(HSSFCell.CELL_TYPE_STRING);
+				cell.setCellValue(columns[i - 1]);
 			}
-			cell.setCellValue(cellVal);
-			for (int j = 1; j <= nColumn; j++) {
-				cell = row.createCell(j + 1);
-				DBObject oj = dbObjs.get(i);
-				Object obj = oj.get(columns[j - 1]);
-				String cellVal1 = "";
-				if (obj != null) {
-					cellVal1 = obj.toString();
-					if(NumberValidationUtils.isDecimal(cellVal1)||NumberValidationUtils.isWholeNumber(cellVal1)){
-						cell.setCellValue(Double.parseDouble(cellVal1));
-						cell.setCellType(HSSFCell.CELL_TYPE_NUMERIC);
+
+			// 写入各条记录，每条记录对应Excel中的一行
+			for (int i = 0; i < subList.size(); i++) {
+				int iRow = i + 1;
+				row = sheet.createRow((short) iRow);
+				// index
+				cell = row.createCell(0);
+				cell.setCellType(HSSFCell.CELL_TYPE_STRING);
+				cell.setCellValue(i + 1);
+				//
+				// index
+				cell = row.createCell(1);
+				cell.setCellType(HSSFCell.CELL_TYPE_NUMERIC);
+				DBObject dbObj = subList.get(i);
+				Object o = dbObj.get("uploadTime");
+				String cellVal = "";
+				if (o != null) {
+					cellVal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date(Long.valueOf(o.toString())));
+				}
+				cell.setCellValue(cellVal);
+				for (int j = 1; j <= nColumn; j++) {
+					cell = row.createCell(j + 1);
+					DBObject oj = subList.get(i);
+					Object obj = oj.get(columns[j - 1]);
+					String cellVal1 = "";
+					if (obj != null) {
+						cellVal1 = obj.toString();
+						if(NumberValidationUtils.isDecimal(cellVal1)||NumberValidationUtils.isWholeNumber(cellVal1)){
+							cell.setCellValue(Double.parseDouble(cellVal1));
+							cell.setCellType(HSSFCell.CELL_TYPE_NUMERIC);
+						}else{
+							cell.setCellValue(new HSSFRichTextString(cellVal1));
+						}
 					}else{
 						cell.setCellValue(new HSSFRichTextString(cellVal1));
 					}
-				}else{
-					cell.setCellValue(new HSSFRichTextString(cellVal1));
 				}
+				iRow++;
 			}
-			iRow++;
 		}
+
 		return workbook;
 	}
 
