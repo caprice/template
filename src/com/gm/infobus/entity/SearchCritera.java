@@ -19,6 +19,7 @@ public class SearchCritera {
 	private String type;
 	private String interval;
 	private String params;
+	private String device;
 	public String getParams() {
 		return params;
 	}
@@ -120,6 +121,12 @@ public class SearchCritera {
 	}
 	public final void setInterval(String interval) {
 		this.interval = interval;
+	}
+	public final String getDevice() {
+		return device;
+	}
+	public final void setDevice(String device) {
+		this.device = device;
 	}
 	
 }

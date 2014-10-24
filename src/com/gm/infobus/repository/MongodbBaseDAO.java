@@ -137,6 +137,18 @@ public abstract class MongodbBaseDAO<T>{
 	public T get(String id, String collectionName) {
 		return mongoTemplate.findById(id, this.getEntityClass(), collectionName);
 	}
+	
+	/**
+	 * 通过ID获取记录,并且指定了集合名(表的意思)
+	 * 
+	 * @param id
+	 * @param collectionName
+	 *            集合名
+	 * @return
+	 */
+	public void remove(Query query, String collectionName) {
+		mongoTemplate.remove(query, collectionName);
+	}
 
 	/**
 	 * 获取需要操作的实体类class

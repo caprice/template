@@ -14,4 +14,8 @@ public interface NGIDataService {
 	DBObject addIntoCollection(String collectionName, DBObject bean);
 	void dropCollection(String collectionName);
 	void batchInsertIntoCollection(List<DBObject> beans, String colName);
+	List<DBObject> getLogDBObjects(String collectionName, SearchCritera critera);
+	void clearLogsByDevice(String collectionName, SearchCritera critera);
+	void clearNGIDataByVin(String collectionName, SearchCritera critera);
+	
 }

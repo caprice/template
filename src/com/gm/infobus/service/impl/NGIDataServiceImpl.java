@@ -84,4 +84,38 @@ public class NGIDataServiceImpl implements NGIDataService {
 		return dataDAO.findOne(query, collectionName);
 	}
 
+	@Override
+	public List<DBObject> getLogDBObjects(String collectionName, SearchCritera critera) {
+		Query query = new Query();
+		Criteria c = Criteria.where("device").is(critera.getDevice());
+		if (!"".equals(critera.getDate())) {
+			c.and("uploadTime").gte(critera.getDateTime().getMillis()).lt(critera.getDateTime().getMillis() + 24 * 60 * 60 * 1000);
+		}
+		query.addCriteria(c);
+		query.with(new Sort(Sort.Direction.ASC, "uploadTime"));
+		return dataDAO.find(query, collectionName);
+	}
+
+	@Override
+	public void clearLogsByDevice(String collectionName, SearchCritera critera) {
+		Query query = new Query();
+		Criteria c = Criteria.where("device").is(critera.getDevice());
+		if (!"".equals(critera.getDate())) {
+			c.and("uploadTime").gte(critera.getDateTime().getMillis()).lt(critera.getDateTime().getMillis() + 24 * 60 * 60 * 1000);
+		}
+		query.addCriteria(c);
+		dataDAO.remove(query, collectionName);
+	}
+	
+	@Override
+	public void clearNGIDataByVin(String collectionName, SearchCritera critera) {
+		Query query = new Query();
+		Criteria c = Criteria.where("vin_2_9").is(critera.getVin2_9()).and("vin_10_17").is(critera.getVin10_17());
+		if (!"".equals(critera.getDate())) {
+			c.and("uploadTime").gte(critera.getDateTime().getMillis()).lt(critera.getDateTime().getMillis() + 24 * 60 * 60 * 1000);
+		}
+		query.addCriteria(c);
+		dataDAO.remove(query, collectionName);
+	}
+
 }

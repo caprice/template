@@ -2,14 +2,11 @@ package com.gm.infobus.web;
 
 //import javax.inject.Inject;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import net.sf.json.JSONArray;
 
 import org.apache.commons.io.IOUtils;
 import org.bson.types.ObjectId;
@@ -28,81 +25,12 @@ import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 
 @Controller
-@RequestMapping(value = "/data")
-public class NGIDataController extends BaseController{
+@RequestMapping(value = "/log")
+public class LoggerController extends BaseController {
 
 	@Autowired
 	private NGIDataService service;
-	
-	/**
-	 * 
-	 * @param condition
-	 *            the condition
-	 * @return the object
-	 * @throws IOException 
-	 */
-	@RequestMapping(value = "upload")
-	@ResponseBody
-	public JsonResponse uploadData() throws IOException {
-		long nowTimeMillis = Calendar.getInstance().getTimeInMillis();
-		String requestStr = IOUtils.toString(this.request.getInputStream(), "UTF-8");
-		JSONArray jsonArr = JSONArray.fromObject(requestStr);
-		List<DBObject> list = new ArrayList<DBObject>();
-		for(int i=0;i<jsonArr.size();i++){
-			DBObject dbObject = (DBObject)JSON.parse(jsonArr.getJSONObject(i).toString());
-			dbObject.put("serverTime", nowTimeMillis);
-			list.add(dbObject);
-		}
-		JsonResponse response = new JsonResponse();
-		service.batchInsertIntoCollection(list, "ngidata");
-		response.setResult(ConstantUtils.JSON.RESULT_OK);
-		return response;
-	}
-	
-	/**
-	 * 
-	 * @param condition
-	 *            the condition
-	 * @return the object
-	 * @throws IOException 
-	 */
-	@RequestMapping(value = "showData")
-	@ResponseBody
-	public JsonResponse getNGIData(SearchCritera critera) throws IOException {
-		List<DBObject> dbObjs = service.getDBObjects("ngidata", critera);
-		JsonResponse response = new JsonResponse();
-		response.setData(dbObjs);
-		response.setResult(ConstantUtils.JSON.RESULT_OK);
-		return response;
-	}
-	
-	/**
-	 * 
-	 * @param condition
-	 *            the condition
-	 * @return the object
-	 * @throws IOException 
-	 */
-	@RequestMapping(value = "init")
-	public String init(Map<String, Object> map) throws IOException {
-		List<DBObject> dbObjs = service.getValueByParam("ngidata", new String[]{"vin_2_9", "vin_10_17"});
-		Set<DBObject> dbObjRes = new HashSet<DBObject>();
-		if(dbObjs != null){
-			for(DBObject dbo : dbObjs){
-				dbObjRes.add(dbo);
-			}
-		}
-		List<DBObject> configObjs = service.getDBObjects("ngidatatmp");
-		if(configObjs != null && !configObjs.isEmpty()){
-			DBObject configObj = configObjs.get(0);
-			configObj.removeField("_id");
-			Set<String> params = configObj.keySet();
-			map.put("params", params);
-		}
-		map.put("vins", dbObjRes);
-		return "index";
-	}
-	
+
 	/**
 	 * 
 	 * @param condition
@@ -110,46 +38,17 @@ public class NGIDataController extends BaseController{
 	 * @return the object
 	 * @throws IOException
 	 */
-	@RequestMapping(value = "clearNgiData")
+	@RequestMapping(value = "uploadLogs")
 	@ResponseBody
-	public JsonResponse clearNgiData(SearchCritera critera) throws IOException {
-		service.clearNGIDataByVin("ngidata", critera);
-		JsonResponse response = new JsonResponse();
-		response.setResult(ConstantUtils.JSON.RESULT_OK);
-		response.setMsg("clear "+ critera.getVinStr()+" successfullly.");
-		response.setData("");
-		return response;
-	}
-	
-	/**
-	 * 
-	 * @param condition
-	 *            the condition
-	 * @return the object
-	 * @throws IOException 
-	 */
-	@RequestMapping(value = "openNgiDataTemplateSetting")
-	public String openNgiDataTemplateSetting(Map<String, Set<DBObject>> map) throws IOException {
-		return "ngidatatmp";
-	}
-	
-	/**
-	 * 
-	 * @param condition
-	 *            the condition
-	 * @return the object
-	 * @throws IOException 
-	 */
-	@RequestMapping(value = "saveNgiDataTmp")
-	@ResponseBody
-	public JsonResponse saveNgiDataTmp() throws IOException {
+	public JsonResponse uploadLogs() throws IOException {
+		long nowTimeMillis = Calendar.getInstance().getTimeInMillis();
 		String requestStr = IOUtils.toString(this.request.getInputStream(), "UTF-8");
-		DBObject dbObject = (DBObject)JSON.parse(requestStr);
+		DBObject dbObject = (DBObject) JSON.parse(requestStr);
+		dbObject.put("serverTime", nowTimeMillis);
 		JsonResponse response = new JsonResponse();
-		service.dropCollection("ngidatatmp");
-		DBObject db_res = service.addIntoCollection("ngidatatmp", dbObject);
+		DBObject db_res = service.addIntoCollection("appLogs", dbObject);
 		response.setResult(ConstantUtils.JSON.RESULT_OK);
-		response.setMsg("save successfullly.");
+		response.setMsg("upload successfullly.");
 		response.setData(db_res);
 		return response;
 	}
@@ -159,39 +58,139 @@ public class NGIDataController extends BaseController{
 	 * @param condition
 	 *            the condition
 	 * @return the object
-	 * @throws IOException 
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "clearLogs")
+	@ResponseBody
+	public JsonResponse clearLogs(SearchCritera critera) throws IOException {
+		service.clearLogsByDevice("appLogs", critera);
+		JsonResponse response = new JsonResponse();
+		response.setResult(ConstantUtils.JSON.RESULT_OK);
+		response.setMsg("clear "+ critera.getDevice()+" successfullly.");
+		response.setData("");
+		return response;
+	}
+
+	/**
+	 * 
+	 * @param condition
+	 *            the condition
+	 * @return the object
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "showData")
+	@ResponseBody
+	public JsonResponse getNGIData(SearchCritera critera) throws IOException {
+		List<DBObject> dbObjs = service.getLogDBObjects("appLogs", critera);
+		for(DBObject dbObj : dbObjs){
+			if (dbObj.containsField("exception")) {
+				String newVal = ((String)dbObj.get("exception")).replaceAll("\n", "<br>");
+				dbObj.put("exception", newVal);
+			}
+		}
+		JsonResponse response = new JsonResponse();
+		response.setData(dbObjs);
+		response.setResult(ConstantUtils.JSON.RESULT_OK);
+		return response;
+	}
+
+	/**
+	 * 
+	 * @param condition
+	 *            the condition
+	 * @return the object
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "init")
+	public String init(Map<String, Object> map) throws IOException {
+		List<DBObject> dbObjs = service.getValueByParam("appLogs", new String[] { "device" });
+		Set<DBObject> dbObjRes = new HashSet<DBObject>();
+		if (dbObjs != null) {
+			for (DBObject dbo : dbObjs) {
+				dbObjRes.add(dbo);
+			}
+		}
+		List<DBObject> configObjs = service.getDBObjects("logdatatmp");
+		if (configObjs != null && !configObjs.isEmpty()) {
+			DBObject configObj = configObjs.get(0);
+			configObj.removeField("_id");
+			Set<String> params = configObj.keySet();
+			map.put("params", params);
+		}
+		map.put("devices", dbObjRes);
+		return "logs";
+	}
+
+	/**
+	 * 
+	 * @param condition
+	 *            the condition
+	 * @return the object
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "openLogDataTemplateSetting")
+	public String openNgiDataTemplateSetting(Map<String, Set<DBObject>> map) throws IOException {
+		return "logdatatmp";
+	}
+
+	/**
+	 * 
+	 * @param condition
+	 *            the condition
+	 * @return the object
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "saveLogDataTmp")
+	@ResponseBody
+	public JsonResponse saveLogDataTmp() throws IOException {
+		String requestStr = IOUtils.toString(this.request.getInputStream(), "UTF-8");
+		DBObject dbObject = (DBObject) JSON.parse(requestStr);
+		JsonResponse response = new JsonResponse();
+		service.dropCollection("logdatatmp");
+		DBObject db_res = service.addIntoCollection("logdatatmp", dbObject);
+		response.setResult(ConstantUtils.JSON.RESULT_OK);
+		response.setMsg("save successfullly.");
+		response.setData(db_res);
+		return response;
+	}
+
+	/**
+	 * 
+	 * @param condition
+	 *            the condition
+	 * @return the object
+	 * @throws IOException
 	 */
 	@RequestMapping(value = "viewDetail")
 	@ResponseBody
 	public JsonResponse viewDetail(int time, boolean isNew, int machine, long timeSecond, int inc) throws IOException {
 		JsonResponse response = new JsonResponse();
-		ObjectId objId = new ObjectId(time,machine, inc);
-		DBObject obj =	service.getNGIRecordById(objId.toString(), "ngidata");
+		ObjectId objId = new ObjectId(time, machine, inc);
+		DBObject obj = service.getNGIRecordById(objId.toString(), "appLogs");
 		obj.removeField("_id");
 		obj.removeField("_class");
 		response.setResult(ConstantUtils.JSON.RESULT_OK);
 		response.setData(obj.toString());
 		return response;
 	}
-	
-	  /** 
-		* @Title: exportExcel 
-		* @Description: 导出用户数据生成的excel文件
-		* @param  model
-		* @param  request
-		* @param  response
-		* @param  设定文件 
-		* @return ModelAndView    返回类型 
-		* @throws 
-		*/
-		@RequestMapping(value="/exportExcel",method=RequestMethod.POST)  
-	    public String exportExcel(ModelMap model, SearchCritera critera) {  
-		   List<DBObject> dbObjs = service.getDBObjects("ngidata", critera);
-		   model.put("dataList", dbObjs);
-		   String params = critera.getParams();
-		   model.put("params", params);
-	       return "exportExcel";   
-	   }
 
-	
+	/**
+	 * @Title: exportExcel
+	 * @Description: 导出用户数据生成的excel文件
+	 * @param model
+	 * @param request
+	 * @param response
+	 * @param 设定文件
+	 * @return ModelAndView 返回类型
+	 * @throws
+	 */
+	@RequestMapping(value = "/exportExcel", method = RequestMethod.POST)
+	public String exportExcel(ModelMap model, SearchCritera critera) {
+		List<DBObject> dbObjs = service.getLogDBObjects("appLogs", critera);
+		model.put("dataList", dbObjs);
+		String params = critera.getParams();
+		model.put("params", params);
+		return "exportExcel";
+	}
+
 }

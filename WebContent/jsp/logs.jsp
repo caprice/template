@@ -6,36 +6,27 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<%@include file="common.jsp"%>
 <script type="text/javascript">
-	function showDetail(time, isNew, machine, timeSecond, inc){
-		var p_url = '${contextPath}' + '/data/viewDetail.do';
-		$('#info').html('');
-		var data = 'time='+time/1000+"&"+'isNew='+isNew+"&"+'machine='+machine+"&"+'timeSecond='+timeSecond+"&"+'inc='+inc;
-		doAjaxSubmit(p_url, data, p_callback);
+function showDetail(time, isNew, machine, timeSecond, inc){
+	var p_url = '${contextPath}' + '/log/viewDetail.do';
+	$('#info').html('');
+	var data = 'time='+time/1000+"&"+'isNew='+isNew+"&"+'machine='+machine+"&"+'timeSecond='+timeSecond+"&"+'inc='+inc;
+	doAjaxSubmit(p_url, data, p_callback);
+}
+p_callback = function(response) {
+	if (response.result == 0) {
+		$('#info').html(response.data);
+		$('#error').hide('slow');
+		$('#info').show('slow');
+
+	} else {
+		$('#error').html("Please correct following errors: " + response.msg);
+		$('#info').hide('slow');
+		$('#error').show('slow');
+
 	}
-	p_callback = function(response) {
-		if (response.result == 0) {
-			$('#info').html(response.data);
-			$('#error').hide('slow');
-			$('#info').show('slow');
-
-		} else {
-			$('#error').html("Please correct following errors: " + response.msg);
-			$('#info').hide('slow');
-			$('#error').show('slow');
-
-		}
-	};
-	
+};
 	$(function(){
 		$(".multiselect").multiselect();
-		$("#type").change(function(){
-			 var selected = $(this).children('option:selected').val();
-			 if(selected == "getVehicleDataWithTimer"){
-				 $("#interval").show();
-			 }else{
-				 $("#interval").hide();
-			 }
-		});
 		$("#search").click(function(event){
 			event.preventDefault();
 			$('#result').html('');
@@ -44,8 +35,8 @@
 				paramArray.push($(this).val());
 			});
 			
-			var p_url = '${contextPath}' + '/data/showData.do';
-			var data = 'vinStr='+$("#vin").find("option:selected").val()+'&date='+$("#date").val()+'&type='+$("#type").find("option:selected").val()+'&interval='+$("#intervalSel").find("option:selected").val();
+			var p_url = '${contextPath}' + '/log/showData.do';
+			var data = 'device='+$("#device").find("option:selected").val()+'&date='+$("#date").val();
 			var loadi = layer.load('Loading…');
 			$.ajax({
 				type : "POST",
@@ -75,14 +66,14 @@
 							html.push(' <td class="center">'+i+'</td>');
 							html.push(' <td class="center" >');
 							if("uploadTime" in item){
-								html.push(' <span class="label label-success">'+formatDate(new Date(item.uploadTime),"%H:%m:%s:%S")+'</span>');
+								html.push(' <span class="label label-success">'+formatDate(new Date(item.uploadTime),"%Y-%M-%d %H:%m:%s")+'</span>');
 							}else{
 								html.push(' <span class="label-success"></span>');
 							}
 							html.push(' </td>');
 							html.push(' <td class="center">');
 							if("serverTime" in item){
-								html.push(' <span class="label label-success">'+formatDate(new Date(item.serverTime),"%H:%m:%s:%S")+'</span>');
+								html.push(' <span class="label label-success">'+formatDate(new Date(item.serverTime),"%Y-%M-%d %H:%m:%s")+'</span>');
 							}else{
 								html.push(' <span class="label-success"></span>');
 							}
@@ -90,7 +81,8 @@
 							for(var j=0;j<paramArray.length;j++){
 								html.push(' <td class="center">');
 								if(paramArray[j] in item){
-									html.push(' <span class="label label-success">'+eval('item.'+paramArray[j])+'</span>');
+									var paramVal = eval('item.'+paramArray[j]);
+									html.push(' <span class="label label-success">'+paramVal+'</span>');
 								}else{
 									html.push(' <span class="label-success"></span>');
 								}
@@ -133,12 +125,11 @@
 			
 		});
 		
-		
-		$("#clearNgiData").click(function(event){
+		$("#clearlogs").click(function(event){
 			event.preventDefault();
 			$('#result').html('');
-			var p_url = '${contextPath}' + '/data/clearNgiData.do';
-			var data = 'vinStr='+$("#vin").find("option:selected").val()+'&date='+$("#date").val()+'&type='+$("#type").find("option:selected").val()+'&interval='+$("#intervalSel").find("option:selected").val();
+			var p_url = '${contextPath}' + '/log/clearLogs.do';
+			var data = 'device='+$("#device").find("option:selected").val()+'&date='+$("#date").val();
 			var loadi = layer.load('Loading…');
 			$.ajax({
 				type : "POST",
@@ -152,11 +143,11 @@
 						layer.msg('Error occurring!', 2, -1);
 						layer.close(loadi);
 					}
-			}});
+					}});
 		});
 	});
 </script>
-<title>NGI Data</title>
+<title>Logs Data</title>
 <body>
 	<%@include file="header.jsp"%>
 		<div id="tip" class="tips" >
@@ -178,14 +169,10 @@
 						<a href="#">Home</a> <span class="divider">/</span>
 					</li>
 					<li>
-						<a href="#">NGI Data</a>
+						<a href="#">Logs Data</a>
 					</li>
 				</ul>
 			</div>
-					<div id="tip" class="tips" >
-			<div id="info" class="success"></div>
-			<div id="error" style="display:none"></div>
-		</div>		
 		
 			<div class="row-fluid sortable">
 				<div class="box span12">
@@ -198,63 +185,38 @@
 						</div>
 					</div>
 					<div class="box-content">
-						<form class="form-horizontal" method="post" action="${contextPath}/data/exportExcel.do">
+						<form class="form-horizontal" method="post" action="${contextPath}/log/exportExcel.do">
 							<fieldset>
 
 							  <div class="control-group">
-								<label class="control-label" for="vid">Vin:</label>
+								<label class="control-label" for="device">Device:</label>
 								<div class="controls">
-								  <select id="vin" name="vinStr">
-								  	<c:forEach var="item" items="${vins}" varStatus="status">
-										<option value="${item.vin_2_9};${item.vin_10_17}">${item.vin_2_9}${item.vin_10_17}</option>	  	
+								  <select id="device" name="device">
+								  	<c:forEach var="item" items="${devices}" varStatus="status">
+										<option value="${item.device}">${item.device}</option>	  	
 									</c:forEach>
 								  </select>
 								</div>
 							  </div>
-							
+							  
 							  <div class="control-group">
-							  <div style="float:left;margin-left:12px;">Choose params:</div>
-								<div id="sss">
+							  	<div style="float:left;margin-left:46px;">Choose params:</div>
     							<select id="params" class="multiselect"  multiple="multiple" name="params">
 								  	<c:forEach var="item" items="${params}" varStatus="status">
 										<option value="${item}" selected="selected">${item}</option>	  	
 									</c:forEach>
       							</select>
-								</div>
-							</div>
-							<div class="control-group" style="float:left">
-							  <label class="control-label" for="date">upload date:</label>
+							 </div>
+							<div class="control-group"  style="float:left">
+							  <label class="control-label" for="date">log date:</label>
 							  <div class="controls">
 								<input type="text" class="input-xlarge datepicker" id="date" name="date">
 							  </div>
 							</div>		
-				  				
-				  			<div class="control-group"  style="float:left">
-								<label class="control-label" for="type">The API of get data:</label>
-								<div class="controls">
-								  <select id="type" name="type">
-										<option value="all">All</option>	  	
-										<option value="watchVehicleData">watchVehicleData</option>	  	
-										<option value="getVehicleDataWithTimer">getVehicleDataWithTimer</option>
-								 </select>	  	
-								</div>
-							  </div>	
-				  			<div class="control-group" id="interval" style="display:none">
-								<label class="control-label" for="interval">interval(millis):</label>
-								<div class="controls">
-								  <select id="intervalSel" name="intervalSel">
-										<option value=""></option>	  	
-										<option value="100">100</option>	  	
-										<option value="1000">1000</option>	  	
-										<option value="2000">2000</option>	  	
-										<option value="5000">5000</option>	  	
-								 </select>	  	
-								</div>
-							  </div>							    
 							  <div class="form-actions" style="clear:both">
 								<button id="search" class="btn btn-primary">Search</button>
 								<input type="submit" id="exportExcel" class="btn btn-primary" value="Export to Excel"/>
-								<button id="clearNgiData" class="btn btn-primary">Clear data</button>								
+								<button id="clearlogs" class="btn btn-primary">clear logs</button>
 							  </div>
 							</fieldset>
 						  </form>
