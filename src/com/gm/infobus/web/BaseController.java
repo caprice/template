@@ -66,6 +66,7 @@ public abstract class BaseController {
 		jsonObj.put(ConstantUtils.JSON.KEY_RESULT, ConstantUtils.JSON.RESULT_OK);
 		jsonObj.put(ConstantUtils.JSON.KEY_DATA, resultData);
 		String resData = null;
+		
 		if (config != null) {
 			resData = JSONObject.fromObject(jsonObj, config).toString();
 		} else {
