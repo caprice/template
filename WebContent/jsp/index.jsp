@@ -26,6 +26,123 @@
 		}
 	};
 	
+	
+	function goToPage(pageIndex){
+		$('#result').html('');
+		var paramArray = [];
+		$("#params").find("option:selected").each(function(){
+			paramArray.push($(this).val());
+		});
+		
+		var p_url = '${contextPath}' + '/data/showData.do';
+		var data = 'vinStr='+$("#vin").find("option:selected").val()+'&date='+$("#date").val()+'&type='+$("#type").find("option:selected").val()+'&interval='+$("#intervalSel").find("option:selected").val()+'&pageIndex='+pageIndex;
+		var loadi;
+		$.ajax({
+			type : "POST",
+			url : p_url,
+	        dataType: "json",
+	        data: data,
+			beforeSend : function(XMLHttpRequest) {
+				loadi = layer.load('Loading…');
+			},
+			complete : function(XMLHttpRequest, textStatus) {
+				layer.close(loadi);
+			},
+			error : function() {
+				layer.msg('Error occurring!', 2, -1);
+			},
+			success : function(response){buildSuccessResponse(response, paramArray)}
+		});
+	}
+	
+	function buildSuccessResponse(response, paramArray) {
+		if (response.result == 0) {
+			var html = [];
+			html.push('<table class="table table-striped table-bordered bootstrap-datatable datatable">');
+			html.push('<thead>');
+			html.push('<tr>');
+			html.push('<th>Serial Number</th>');
+			html.push('<th>upload Date Time</th>');
+			html.push('<th>server Time</th>');
+			for(var j=0;j<paramArray.length;j++){
+				html.push(' <th>'+paramArray[j]+'</th>');
+			}	
+			html.push('<th>Actions</th>');
+			html.push('</tr>');
+			html.push('</thead>');
+			html.push(' <tbody>');
+			var item;
+			for(var i=0;i<response.data.items.length;i++){
+				item = response.data.items[i];
+				html.push(' <tr>');
+				html.push(' <td class="center">'+i+'</td>');
+				html.push(' <td class="center" >');
+				if("uploadTime" in item){
+					html.push(' <span class="label label-success">'+formatDate(new Date(item.uploadTime),"%H:%m:%s:%S")+'</span>');
+				}else{
+					html.push(' <span class="label-success"></span>');
+				}
+				html.push(' </td>');
+				html.push(' <td class="center">');
+				if("serverTime" in item){
+					html.push(' <span class="label label-success">'+formatDate(new Date(item.serverTime),"%H:%m:%s:%S")+'</span>');
+				}else{
+					html.push(' <span class="label-success"></span>');
+				}
+				html.push(' </td>');
+				for(var j=0;j<paramArray.length;j++){
+					html.push(' <td class="center">');
+					if(paramArray[j] in item){
+						html.push(' <span class="label label-success">'+eval('item.'+paramArray[j])+'</span>');
+					}else{
+						html.push(' <span class="label-success"></span>');
+					}
+					html.push(' </td>');								
+				}
+				html.push(' <td class="center">');
+				html.push(' <a class="btn btn-success" href="#" onclick="showDetail('+item._id.time+','+item._id["new"]+','+item._id.machine+','+item._id.timeSecond+','+item._id.inc+')">');
+				html.push(' <i class="icon-zoom-in icon-white"></i>  View');
+				//html.push(' <a class="btn btn-danger" href="#"><i class="icon-trash icon-white"></i> Delete</a>');
+				html.push(' </td> ');
+				html.push(' </tr>');
+			}
+			html.push(' </tbody>');
+			html.push('  </table>  ');
+			if(response.data.pageCount > 1){
+				if (response.data.pageIndex == 1) {
+					html.push('<span class="disqp">第一页</span>');
+					html.push('&nbsp;&nbsp');
+					html.push('<span class="disqp">上一页</span>');
+				} else {
+					html.push('<a href="javascript:void(0)" class="qp" onclick="goToPage(1)">第一页</a>');
+					html.push('&nbsp;&nbsp');
+					html.push('<a href="javascript:void(0)" class="qp" onclick="goToPage('+(response.data.pageIndex - 1)+')">上一页</a>');
+				}
+			}
+			html.push('&nbsp;&nbsp');
+			// 下一页
+			if (response.data.pageCount > 1) {
+				if (response.data.pageIndex == response.data.pageCount) {
+					html.push('<span class="disqp">下一页</span>');
+					html.push('&nbsp;&nbsp');
+					html.push('<span class="disqp">末页</span>');
+				} else {
+					html.push('<a href="javascript:void(0)" class="qp" onclick="goToPage('+(response.data.pageIndex + 1)+')">下一页</a>');
+					html.push('&nbsp;&nbsp');
+					html.push('<a href="javascript:void(0)" class="qp" onclick="goToPage('+response.data.pageCount+')">末页</a>');
+				}
+			}
+			html.push('&nbsp;&nbsp');
+			html.push('<span class="info">共<font color=red>' + response.data.total+ '</font>条&nbsp;&nbsp;共<font color=red>'+ response.data.pageCount + '</font>页&nbsp;&nbsp;当前是第<font color=red>'+ response.data.pageIndex + '</font>页</span>');
+			$('#result').html(
+				html.join('')
+			);
+			//datatable
+		} else {
+
+		}
+	}
+	
 	$(function(){
 		$(".multiselect").multiselect();
 		$("#type").change(function(){
@@ -38,99 +155,7 @@
 		});
 		$("#search").click(function(event){
 			event.preventDefault();
-			$('#result').html('');
-			var paramArray = [];
-			$("#params").find("option:selected").each(function(){
-				paramArray.push($(this).val());
-			});
-			
-			var p_url = '${contextPath}' + '/data/showData.do';
-			var data = 'vinStr='+$("#vin").find("option:selected").val()+'&date='+$("#date").val()+'&type='+$("#type").find("option:selected").val()+'&interval='+$("#intervalSel").find("option:selected").val();
-			var loadi = layer.load('Loading…');
-			$.ajax({
-				type : "POST",
-				url : p_url,
-		        dataType: "json",
-		        data: data,
-				success : function(response) {
-					if (response.result == 0) {
-						layer.close(loadi);
-						var html = ['<table class="table table-striped table-bordered bootstrap-datatable datatable">'];
-						html.push('<thead>');
-						html.push('<tr>');
-						html.push('<th>Serial Number</th>');
-						html.push('<th>upload Date Time</th>');
-						html.push('<th>server Time</th>');
-						for(var j=0;j<paramArray.length;j++){
-							html.push(' <th>'+paramArray[j]+'</th>');
-						}	
-						html.push('<th>Actions</th>');
-						html.push('</tr>');
-						html.push('</thead>');
-						html.push(' <tbody>');
-						var item;
-						for(var i=0;i<response.data.length;i++){
-							item = response.data[i];
-							html.push(' <tr>');
-							html.push(' <td class="center">'+i+'</td>');
-							html.push(' <td class="center" >');
-							if("uploadTime" in item){
-								html.push(' <span class="label label-success">'+formatDate(new Date(item.uploadTime),"%H:%m:%s:%S")+'</span>');
-							}else{
-								html.push(' <span class="label-success"></span>');
-							}
-							html.push(' </td>');
-							html.push(' <td class="center">');
-							if("serverTime" in item){
-								html.push(' <span class="label label-success">'+formatDate(new Date(item.serverTime),"%H:%m:%s:%S")+'</span>');
-							}else{
-								html.push(' <span class="label-success"></span>');
-							}
-							html.push(' </td>');
-							for(var j=0;j<paramArray.length;j++){
-								html.push(' <td class="center">');
-								if(paramArray[j] in item){
-									html.push(' <span class="label label-success">'+eval('item.'+paramArray[j])+'</span>');
-								}else{
-									html.push(' <span class="label-success"></span>');
-								}
-								html.push(' </td>');								
-							}
-							html.push(' <td class="center">');
-							html.push(' <a class="btn btn-success" href="#" onclick="showDetail('+item._id.time+','+item._id["new"]+','+item._id.machine+','+item._id.timeSecond+','+item._id.inc+')">');
-							html.push(' <i class="icon-zoom-in icon-white"></i>  View');
-							//html.push(' <a class="btn btn-danger" href="#"><i class="icon-trash icon-white"></i> Delete</a>');
-							html.push(' </td> ');
-							html.push(' </tr>');
-						}
-						html.push(' </tbody>');
-						html.push('  </table>  ');
-						$('#result').html(
-							html.join('')
-						);
-						//datatable
-						$('.datatable').dataTable({
-								"bPaginate": true, //翻页功能
-								"bLengthChange": true, //改变每页显示数据数量
-								"bFilter": false, //过滤功能
-								"bSort": false, //排序功能
-								"bInfo": true,//页脚信息
-								"bAutoWidth": false,//自动宽度
-								"sDom": "<'row-fluid'<'span12'l>r>t<'row-fluid'<'span12'i>p>",
-								"sPaginationType": "bootstrap",
-								"oLanguage": {
-								"sLengthMenu": "_MENU_ records per page"
-								}
-							} );
-						
-					} else {
-						layer.close(loadi);
-						layer.msg('Error occurring!', 2, -1);
-
-					}
-				},
-			});
-			
+			goToPage(0);		
 		});
 		
 		
@@ -266,6 +291,9 @@
 		</div><!--/row-->
     		
 		<div id="result" class="cust">
+		</div>
+		<div id="pagination">
+			<mm:page pagination="${pa}" baseurl="${contextPath}/data/showData.do"></mm:page>
 		</div>
 		<!-- content ends -->
 		</div><!--/#content.span10-->			

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.gm.infobus.entity.SearchCritera;
 import com.gm.infobus.repository.NGIDataDAO;
+import com.gm.infobus.repository.base.Pagination;
 import com.gm.infobus.service.NGIDataService;
 import com.mongodb.DBObject;
 
@@ -75,6 +76,24 @@ public class NGIDataServiceImpl implements NGIDataService {
 		query.with(new Sort(Sort.Direction.ASC, "uploadTime"));
 		return dataDAO.find(query, collectionName);
 	}
+	
+	@Override
+	public Pagination<DBObject> getDBObjectsByPage(String collectionName, SearchCritera critera) {
+		Query query = new Query();
+		Criteria c = Criteria.where("vin_2_9").is(critera.getVin2_9()).and("vin_10_17").is(critera.getVin10_17());
+		if (!"".equals(critera.getDate())) {
+			c.and("uploadTime").gte(critera.getDateTime().getMillis()).lt(critera.getDateTime().getMillis() + 24 * 60 * 60 * 1000);
+		}
+		if(!"all".equals(critera.getType())){
+			c.and("type").is(critera.getType());
+		}
+		if(!"".equals(critera.getInterval())){
+			c.and("interval").is(critera.getInterval());
+		}
+		query.addCriteria(c);
+		query.with(new Sort(Sort.Direction.ASC, "uploadTime"));
+		return dataDAO.getPage(critera.getPageIndex(), query, collectionName);
+	}
 
 	@Override
 	public DBObject getNGIRecordById(String id, String collectionName) {
@@ -84,6 +103,18 @@ public class NGIDataServiceImpl implements NGIDataService {
 		return dataDAO.findOne(query, collectionName);
 	}
 
+	@Override
+	public Pagination<DBObject> getLogDBObjectsByPage(String collectionName, SearchCritera critera) {
+		Query query = new Query();
+		Criteria c = Criteria.where("device").is(critera.getDevice());
+		if (!"".equals(critera.getDate())) {
+			c.and("uploadTime").gte(critera.getDateTime().getMillis()).lt(critera.getDateTime().getMillis() + 24 * 60 * 60 * 1000);
+		}
+		query.addCriteria(c);
+		query.with(new Sort(Sort.Direction.ASC, "uploadTime"));
+		return dataDAO.getPage(critera.getPageIndex(), query, collectionName);
+	}
+	
 	@Override
 	public List<DBObject> getLogDBObjects(String collectionName, SearchCritera critera) {
 		Query query = new Query();

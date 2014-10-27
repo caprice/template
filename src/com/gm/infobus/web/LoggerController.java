@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.gm.infobus.entity.SearchCritera;
 import com.gm.infobus.json.JsonResponse;
+import com.gm.infobus.repository.base.Pagination;
 import com.gm.infobus.service.NGIDataService;
 import com.gm.infobus.util.ConstantUtils;
 import com.mongodb.DBObject;
@@ -81,8 +82,8 @@ public class LoggerController extends BaseController {
 	@RequestMapping(value = "showData")
 	@ResponseBody
 	public JsonResponse getNGIData(SearchCritera critera) throws IOException {
-		List<DBObject> dbObjs = service.getLogDBObjects("appLogs", critera);
-		for(DBObject dbObj : dbObjs){
+		Pagination<DBObject> dbObjs = service.getLogDBObjectsByPage("appLogs", critera);
+		for(DBObject dbObj : dbObjs.getItems()){
 			if (dbObj.containsField("exception")) {
 				String newVal = ((String)dbObj.get("exception")).replaceAll("\n", "<br>");
 				dbObj.put("exception", newVal);

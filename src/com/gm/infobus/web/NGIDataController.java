@@ -15,6 +15,7 @@ import org.apache.commons.io.IOUtils;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.gm.infobus.entity.SearchCritera;
 import com.gm.infobus.json.JsonResponse;
+import com.gm.infobus.repository.base.Pagination;
 import com.gm.infobus.service.NGIDataService;
 import com.gm.infobus.util.ConstantUtils;
 import com.mongodb.DBObject;
@@ -68,11 +70,12 @@ public class NGIDataController extends BaseController{
 	 */
 	@RequestMapping(value = "showData")
 	@ResponseBody
-	public JsonResponse getNGIData(SearchCritera critera) throws IOException {
-		List<DBObject> dbObjs = service.getDBObjects("ngidata", critera);
+	public JsonResponse getNGIData(SearchCritera critera, Model model) throws IOException {
+		Pagination<DBObject> pageData= service.getDBObjectsByPage("ngidata", critera);
 		JsonResponse response = new JsonResponse();
-		response.setData(dbObjs);
+		response.setData(pageData);
 		response.setResult(ConstantUtils.JSON.RESULT_OK);
+		model.addAttribute("pa", pageData);
 		return response;
 	}
 	

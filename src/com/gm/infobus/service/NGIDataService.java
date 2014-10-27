@@ -3,6 +3,7 @@ package com.gm.infobus.service;
 import java.util.List;
 
 import com.gm.infobus.entity.SearchCritera;
+import com.gm.infobus.repository.base.Pagination;
 import com.mongodb.DBObject;
 
 public interface NGIDataService {
@@ -17,5 +18,7 @@ public interface NGIDataService {
 	List<DBObject> getLogDBObjects(String collectionName, SearchCritera critera);
 	void clearLogsByDevice(String collectionName, SearchCritera critera);
 	void clearNGIDataByVin(String collectionName, SearchCritera critera);
+	Pagination<DBObject> getDBObjectsByPage(String collectionName, SearchCritera critera);
+	Pagination<DBObject> getLogDBObjectsByPage(String collectionName, SearchCritera critera);
 	
 }

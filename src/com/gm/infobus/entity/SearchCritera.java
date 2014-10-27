@@ -20,6 +20,7 @@ public class SearchCritera {
 	private String interval;
 	private String params;
 	private String device;
+	private int pageIndex;
 	public String getParams() {
 		return params;
 	}
@@ -127,6 +128,12 @@ public class SearchCritera {
 	}
 	public final void setDevice(String device) {
 		this.device = device;
+	}
+	public final int getPageIndex() {
+		return pageIndex;
+	}
+	public final void setPageIndex(int pageIndex) {
+		this.pageIndex = pageIndex;
 	}
 	
 }
