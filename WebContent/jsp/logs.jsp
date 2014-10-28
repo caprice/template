@@ -73,17 +73,17 @@ function buildSuccessResponse(response, paramArray) {
 		for(var i=0;i<response.data.items.length;i++){
 			item = response.data.items[i];
 			html.push(' <tr>');
-			html.push(' <td class="center">'+i+'</td>');
+			html.push(' <td class="center">'+(response.data.startRow + i)+'</td>');
 			html.push(' <td class="center" >');
 			if("uploadTime" in item){
-				html.push(' <span class="label label-success">'+formatDate(new Date(item.uploadTime),"%H:%m:%s:%S")+'</span>');
+				html.push(' <span class="label label-success">'+formatDate(new Date(item.uploadTime),"%Y-%M-%d %H:%m:%s")+'</span>');
 			}else{
 				html.push(' <span class="label-success"></span>');
 			}
 			html.push(' </td>');
 			html.push(' <td class="center">');
 			if("serverTime" in item){
-				html.push(' <span class="label label-success">'+formatDate(new Date(item.serverTime),"%H:%m:%s:%S")+'</span>');
+				html.push(' <span class="label label-success">'+formatDate(new Date(item.serverTime),"%Y-%M-%d %H:%m:%s")+'</span>');
 			}else{
 				html.push(' <span class="label-success"></span>');
 			}
@@ -108,11 +108,11 @@ function buildSuccessResponse(response, paramArray) {
 		html.push('  </table>  ');
 		if(response.data.pageCount > 1){
 			if (response.data.pageIndex == 1) {
-				html.push('<span class="disqp">第一页</span>');
+				html.push('<span class="disqp">首页</span>');
 				html.push('&nbsp;&nbsp');
 				html.push('<span class="disqp">上一页</span>');
 			} else {
-				html.push('<a href="javascript:void(0)" class="qp" onclick="goToPage(1)">第一页</a>');
+				html.push('<a href="javascript:void(0)" class="qp" onclick="goToPage(1)">首页</a>');
 				html.push('&nbsp;&nbsp');
 				html.push('<a href="javascript:void(0)" class="qp" onclick="goToPage('+(response.data.pageIndex - 1)+')">上一页</a>');
 			}
