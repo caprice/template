@@ -238,7 +238,9 @@ function buildSuccessResponse(response, paramArray) {
 							  <div class="form-actions" style="clear:both">
 								<button id="search" class="btn btn-primary">Search</button>
 								<input type="submit" id="exportExcel" class="btn btn-primary" value="Export to Excel"/>
-								<button id="clearlogs" class="btn btn-primary">clear logs</button>
+								<sec:authorize ifAllGranted="ROLE_ADMIN">
+									<button id="clearlogs" class="btn btn-primary">clear logs</button>
+								</sec:authorize>
 							  </div>
 							</fieldset>
 						  </form>

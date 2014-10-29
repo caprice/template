@@ -17,9 +17,9 @@
 			<li><a class="ajax-link" href="http://www.google.com"><i
 					class="icon-align-justify"></i><span class="hidden-tablet">
 						Google</span></a></li>
-			<li><a href="index.do"><i class="icon-lock"></i><span
+			<li><a href="${contextPath}/login.do"><i class="icon-lock"></i><span
 					class="hidden-tablet"> Log in</span></a></li>
-			<li><a href="index.do"><i class="icon-lock"></i><span
+			<li><a href="${contextPath}/j_spring_security_logout"><i class="icon-lock"></i><span
 					class="hidden-tablet"> Log out</span></a></li>					
 		</ul>
 		<!--

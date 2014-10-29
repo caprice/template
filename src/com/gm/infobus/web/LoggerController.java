@@ -11,6 +11,7 @@ import java.util.Set;
 import org.apache.commons.io.IOUtils;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -63,6 +64,7 @@ public class LoggerController extends BaseController {
 	 */
 	@RequestMapping(value = "clearLogs")
 	@ResponseBody
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public JsonResponse clearLogs(SearchCritera critera) throws IOException {
 		service.clearLogsByDevice("appLogs", critera);
 		JsonResponse response = new JsonResponse();

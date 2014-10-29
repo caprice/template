@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+           http://www.springframework.org/schema/security
+           http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+	<http pattern="/css/**" security="none" />
+	<http pattern="/js/**" security="none" />
+	<http pattern="/img/**" security="none" />
+	<http pattern="/login*" security="none" />
+	<http pattern="/data/upload*" security="none" />
+	<http pattern="/log/uploadLogs*" security="none" />
+
+	<http auto-config="true" use-expressions="true">
+		<intercept-url pattern="/**" access="hasRole('ROLE_USER')" />
+		<form-login login-page="/login.do"
+			authentication-failure-url="/loginFailed.do" default-target-url="/" />
+		<logout logout-url="/j_spring_security_logout"
+			logout-success-url="/" invalidate-session="true" />
+		<remember-me />
+		<session-management>
+			<concurrency-control max-sessions="1"
+				error-if-maximum-exceeded="true" />
+		</session-management>
+	</http>
+
+	<authentication-manager erase-credentials="false">
+		<authentication-provider>
+			<password-encoder hash="md5">
+				<salt-source user-property="username" />
+			</password-encoder>
+			<user-service>
+				<user name="bluesky" password="65585ca59bf34f75e85add741b20b751" authorities="ROLE_USER, ROLE_ADMIN" />
+				<user name="blacksky" password="ed7597c19fdfbe22f797705ee66e760b" authorities="ROLE_USER" />
+			</user-service>
+		</authentication-provider>
+	</authentication-manager>
+</beans:beans>

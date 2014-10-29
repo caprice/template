@@ -1,7 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="mm" uri="/mytaglib" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <c:set value="${pageContext.request.getContextPath()}" var="contextPath" />
 <!-- CSS -->
 <link id="bs-css" href="${contextPath}/css/bootstrap-cerulean.css"

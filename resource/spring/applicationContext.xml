@@ -32,6 +32,4 @@
 			expression="org.springframework.stereotype.Controller" />
 	</context:component-scan>
 
-	<!-- 导入mongodb的配置文件 -->
-	<import resource="mongo-context.xml" />
 </beans>

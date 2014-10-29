@@ -3,12 +3,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+<%@include file="common.jsp"%>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <link href="http://static.blog.csdn.net/css/notice.css" rel="stylesheet"
 	type="text/css">
-<title>404 -NGI Data</title>
-<script type="text/javascript" charset="utf-8"
-	src="http://www.csdn.net/js/jquery-1.4.2.min.js"></script>
+<title>登录错误</title>
 <style type="text/css">
 iframe.dealply-toast {
 	right: -99999px !important;
@@ -17,6 +16,9 @@ iframe.dealply-toast {
 iframe.dealply-toast.fastestext-revealed {
 	right: 0px !important;
 	margin-bottom: 0px !important;
+}
+a:link {
+text-decoration: underline;
 }
 </style>
 </head>
@@ -28,12 +30,9 @@ iframe.dealply-toast.fastestext-revealed {
 			<div class="top_bg"></div>
 			<div class="notice">
 				<p class="error">
-					<img src="http://static.blog.csdn.net/images/face_error.gif"><span>没找到该页面，如果有问题请与管理员联系
-						<a class="smarterwiki-linkify" href="mailto:Email：blog@csdn.net">Email：wei.w.liu@gm.com</a>
+					<img src="http://static.blog.csdn.net/images/face_error.gif"><span>用户名密码错误,请重新登录！
+						<a class="smarterwiki-linkify" href="${contextPath}/login.do">login</a>
 					</span>
-				</p>
-				<p style="text-align: center;">
-					<a href="http://180.168.173.133/gmlog" style="text-decoration: underline;">访问NGI Data首页</a>
 				</p>
 			</div>
 			<div class="btm_bg"></div>

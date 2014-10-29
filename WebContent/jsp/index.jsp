@@ -279,7 +279,9 @@
 							  <div class="form-actions" style="clear:both">
 								<button id="search" class="btn btn-primary">Search</button>
 								<input type="submit" id="exportExcel" class="btn btn-primary" value="Export to Excel"/>
-								<button id="clearNgiData" class="btn btn-primary">Clear data</button>								
+								<sec:authorize ifAllGranted="ROLE_ADMIN">
+									<button id="clearNgiData" class="btn btn-primary">Clear data</button>	
+								</sec:authorize>							
 							  </div>
 							</fieldset>
 						  </form>

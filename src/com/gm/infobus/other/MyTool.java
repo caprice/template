@@ -4,28 +4,29 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class MyTool {
 
 	public static void main(String[] args) {
-		MyTool tool = new MyTool();
-		Set<String> weSet = tool.generateDataSetFromTextFile("c:/we.txt");
-		Set<String> heSet = tool.generateDataSetFromTextFile("c:/he.txt");
-		List<String> list = new ArrayList<String>();
-		if(weSet!=null&&heSet!=null){
-			for(String key:heSet){
-				if(!weSet.contains(key)){
-					list.add(key);
-				}
-			}
-		}
-		for(String key:list){
-			System.out.println(key);
-		}
+//		MyTool tool = new MyTool();
+//		Set<String> weSet = tool.generateDataSetFromTextFile("c:/we.txt");
+//		Set<String> heSet = tool.generateDataSetFromTextFile("c:/he.txt");
+//		List<String> list = new ArrayList<String>();
+//		if(weSet!=null&&heSet!=null){
+//			for(String key:heSet){
+//				if(!weSet.contains(key)){
+//					list.add(key);
+//				}
+//			}
+//		}
+//		for(String key:list){
+//			System.out.println(key);
+//		}
+//		Md5PasswordEncoder md5 = new Md5PasswordEncoder();
+//		System.out.println(md5.encodePassword("helloword", "bluesky"));
+//		System.out.println(md5.encodePassword("guest", "blacksky"));
 
 	}
 

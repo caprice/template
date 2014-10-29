@@ -14,6 +14,7 @@ import net.sf.json.JSONArray;
 import org.apache.commons.io.IOUtils;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -75,7 +76,6 @@ public class NGIDataController extends BaseController{
 		JsonResponse response = new JsonResponse();
 		response.setData(pageData);
 		response.setResult(ConstantUtils.JSON.RESULT_OK);
-		model.addAttribute("pa", pageData);
 		return response;
 	}
 	
@@ -115,6 +115,7 @@ public class NGIDataController extends BaseController{
 	 */
 	@RequestMapping(value = "clearNgiData")
 	@ResponseBody
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public JsonResponse clearNgiData(SearchCritera critera) throws IOException {
 		service.clearNGIDataByVin("ngidata", critera);
 		JsonResponse response = new JsonResponse();

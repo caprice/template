@@ -8,7 +8,7 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-			classpath:spring/applicationContext.xml
+			classpath:spring/*.xml
 		</param-value>
 	</context-param>
 
@@ -32,8 +32,41 @@
 	<listener>
 		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
 	</listener>
-
+  	<listener>
+    	<listener-class>
+     	 org.springframework.security.web.session.HttpSessionEventPublisher
+    	</listener-class>
+  	</listener>
 	<!-- Filter 定义 -->
+	<!-- User login validation filter -->
+	<!-- 
+	<filter>
+		<filter-name>userSessionFilter</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+		<init-param>
+			<param-name>targetFilterLifecycle</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>excludedUrls</param-name>
+			<param-value>/user/login.do;/index.do;/user/register.do;</param-value>
+		</init-param>
+	</filter>
+	 -->	
+<!-- Enables Spring Security -->  
+    <!--  
+    If you're using some other framework that is also filter-based, then you need to make sure that the Spring  
+    Security filters come first. Examples are the use of SiteMesh to decorate your web pages  
+    -->  
+ <filter>
+  <filter-name>springSecurityFilterChain</filter-name>
+  <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+</filter>
+
+<filter-mapping>
+  <filter-name>springSecurityFilterChain</filter-name>
+  <url-pattern>/*</url-pattern>
+</filter-mapping>	 
 	<!-- Character Encoding filter -->
 	<filter>
 		<filter-name>encodingFilter</filter-name>
@@ -47,21 +80,6 @@
 			<param-value>true</param-value>
 		</init-param>
 	</filter>
-	<!-- User login validation filter -->
-	<!-- 
-	<filter>
-		<filter-name>userSessionFilter</filter-name>
-		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-		<init-param>
-			<param-name>targetFilterLifecycle</param-name>
-			<param-value>true</param-value>
-		</init-param>
-		<init-param>
-			<param-name>excludedUrls</param-name>
-			<param-value>/user/login.do;/index.do;/user/register.do;/;</param-value>
-		</init-param>
-	</filter>
-	 -->
 	<!-- <filter> <filter-name>userTokenFilter</filter-name> <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class> 
 		<init-param> <param-name>targetFilterLifecycle</param-name> <param-value>true</param-value> 
 		</init-param> <init-param> <param-name>excludedUrls</param-name> <param-value>/user/register.do;/user/verifyAccount.do;/user/verifyPlate.do</param-value> 
@@ -70,6 +88,12 @@
 		<filter-name>encodingFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+	<!--  
+		<filter-mapping>
+		<filter-name>userSessionFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>	
+	-->
 	<!-- <filter-mapping> <filter-name>userTokenFilter</filter-name> <url-pattern>*.do</url-pattern> 
 		</filter-mapping> -->
 	<!-- Spring MVC Servlet -->
@@ -116,4 +140,5 @@
 		<param-name>webAppRootKey</param-name>
 		<param-value>ngi</param-value>
 	</context-param>
+	
 </web-app>
